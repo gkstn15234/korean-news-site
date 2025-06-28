@@ -1,0 +1,125 @@
+{{ if not .IsHome }}
+<div class="social-share">
+    <h4><svg class="icon"><use href="#icon-share"/></svg> 이 기사 공유하기</h4>
+    <div class="share-buttons">
+        <!-- 페이스북 -->
+        <a href="https://www.facebook.com/sharer/sharer.php?u={{ .Permalink | urlquery }}" 
+           target="_blank" rel="noopener noreferrer" 
+           class="share-btn facebook"
+           aria-label="페이스북으로 공유">
+            <svg class="icon"><use href="#icon-facebook"/></svg> <span>페이스북</span>
+        </a>
+        
+        <!-- 트위터 -->
+        <a href="https://twitter.com/intent/tweet?url={{ .Permalink | urlquery }}&text={{ .Title | urlquery }}{{ if .Params.tags }}&hashtags={{ delimit .Params.tags "," | urlquery }}{{ end }}" 
+           target="_blank" rel="noopener noreferrer" 
+           class="share-btn twitter"
+           aria-label="트위터로 공유">
+            <svg class="icon"><use href="#icon-twitter"/></svg> <span>트위터</span>
+        </a>
+        
+
+        <!-- 네이버 밴드 -->
+        <a href="https://band.us/plugin/share?body={{ .Title | urlquery }}&route={{ .Permalink | urlquery }}" 
+           target="_blank" rel="noopener noreferrer" 
+           class="share-btn band"
+           aria-label="네이버 밴드로 공유">
+            <svg class="icon"><use href="#icon-users"/></svg> <span>밴드</span>
+        </a>
+        
+        <!-- URL 복사 -->
+        <button class="share-btn copy-url" 
+                onclick="copyURL()"
+                aria-label="URL 복사">
+            <svg class="icon"><use href="#icon-link"/></svg> <span>URL 복사</span>
+        </button>
+    </div>
+</div>
+
+<script>
+function copyURL() {
+    const url = window.location.href;
+    
+    if (navigator.clipboard && window.isSecureContext) {
+        // 현대적인 방법
+        navigator.clipboard.writeText(url).then(function() {
+            showCopySuccess();
+        }).catch(function(err) {
+            fallbackCopyTextToClipboard(url);
+        });
+    } else {
+        // 대안 방법
+        fallbackCopyTextToClipboard(url);
+    }
+}
+
+function fallbackCopyTextToClipboard(text) {
+    const textArea = document.createElement("textarea");
+    textArea.value = text;
+    
+    // 화면에 보이지 않게 설정
+    textArea.style.position = "fixed";
+    textArea.style.top = "0";
+    textArea.style.left = "0";
+    textArea.style.width = "2em";
+    textArea.style.height = "2em";
+    textArea.style.padding = "0";
+    textArea.style.border = "none";
+    textArea.style.outline = "none";
+    textArea.style.boxShadow = "none";
+    textArea.style.background = "transparent";
+    
+    document.body.appendChild(textArea);
+    textArea.focus();
+    textArea.select();
+    
+    try {
+        const successful = document.execCommand('copy');
+        if (successful) {
+            showCopySuccess();
+        } else {
+            alert('URL 복사에 실패했습니다. 수동으로 복사해주세요:\n' + text);
+        }
+    } catch (err) {
+        alert('URL 복사에 실패했습니다. 수동으로 복사해주세요:\n' + text);
+    }
+    
+    document.body.removeChild(textArea);
+}
+
+function showCopySuccess() {
+    const copyBtn = document.querySelector('.copy-url');
+    if (copyBtn) {
+        const originalHTML = copyBtn.innerHTML;
+        copyBtn.style.background = '#38a169';
+        copyBtn.innerHTML = '<svg class="icon"><use href="#icon-check"/></svg> <span>복사완료!</span>';
+        
+        setTimeout(() => {
+            copyBtn.style.background = '#6c757d';
+            copyBtn.innerHTML = '<svg class="icon"><use href="#icon-link"/></svg> <span>URL 복사</span>';
+        }, 2000);
+    }
+}
+
+// 소셜 공유 분석 (옵션)
+document.querySelectorAll('.share-btn').forEach(btn => {
+    btn.addEventListener('click', function() {
+        const platform = this.classList.contains('facebook') ? 'facebook' :
+                        this.classList.contains('twitter') ? 'twitter' :
+                        this.classList.contains('band') ? 'band' :
+                        this.classList.contains('copy-url') ? 'copy' : 'unknown';
+        
+        console.log('소셜 공유:', platform);
+        
+        // Google Analytics 이벤트 (설치된 경우)
+        if (typeof gtag !== 'undefined') {
+            gtag('event', 'share', {
+                method: platform,
+                content_type: 'article',
+                item_id: window.location.pathname
+            });
+        }
+    });
+});
+</script>
+{{ end }} 

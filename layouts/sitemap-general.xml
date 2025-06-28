@@ -1,0 +1,44 @@
+{{ if site.Data.sitemap.general_sitemap }}
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <!-- 홈페이지 -->
+  <url>
+    <loc>{{ .Site.BaseURL }}</loc>
+    <lastmod>{{ now.Format "2006-01-02T15:04:05Z07:00" }}</lastmod>
+    <changefreq>hourly</changefreq>
+    <priority>1.0</priority>
+  </url>
+  
+  <!-- 카테고리 페이지 -->
+  {{ range site.Data.categories.categories }}
+    {{ if .active }}
+    <url>
+      <loc>{{ printf "%s/categories/%s/" $.Site.BaseURL (.slug | urlize) }}</loc>
+      <lastmod>{{ now.Format "2006-01-02T15:04:05Z07:00" }}</lastmod>
+      <changefreq>daily</changefreq>
+      <priority>0.8</priority>
+    </url>
+    {{ end }}
+  {{ end }}
+  
+  <!-- 정적 페이지 -->
+  {{ range where site.RegularPages "Type" "page" }}
+    {{ if not .Params.draft }}
+    <url>
+      <loc>{{ .Permalink }}</loc>
+      <lastmod>{{ .Date.Format "2006-01-02T15:04:05Z07:00" }}</lastmod>
+      <changefreq>monthly</changefreq>
+      <priority>0.6</priority>
+    </url>
+    {{ end }}
+  {{ end }}
+  
+  <!-- 아카이브 페이지 -->
+  <url>
+    <loc>{{ printf "%s/archives/" .Site.BaseURL }}</loc>
+    <lastmod>{{ now.Format "2006-01-02T15:04:05Z07:00" }}</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.7</priority>
+  </url>
+</urlset>
+{{ end }} 

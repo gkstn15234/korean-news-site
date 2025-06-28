@@ -1,0 +1,10 @@
+{{ $categoryMap := dict "정치" "politics" "경제" "economy" "사회" "society" "스포츠" "sports" }}
+{{ $category := index .Params.categories 0 }}
+{{ $englishCategory := index $categoryMap $category | default "news" }}
+
+{{ $title := .Title }}
+{{ $slug := $title | urlize }}
+
+<!-- 영문 슬러그 생성 -->
+{{ $autoSlug := printf "%s-%s" $englishCategory $slug }}
+{{ return $autoSlug }} 

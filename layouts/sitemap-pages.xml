@@ -1,0 +1,67 @@
+{{- printf "<?xml version=\"1.0\" encoding=\"utf-8\" standalone=\"yes\"?>" | safeHTML }}
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  
+  <!-- 정적 페이지들 -->
+  {{ range .Site.Pages }}
+    {{ if eq .Type "page" }}
+    <url>
+      <loc>{{ .Permalink }}</loc>
+      <lastmod>{{ .Date.Format "2006-01-02T15:04:05-07:00" | safeHTML }}</lastmod>
+      <changefreq>monthly</changefreq>
+      <priority>0.5</priority>
+    </url>
+    {{ end }}
+  {{ end }}
+
+  <!-- 푸터 페이지들 -->
+  <url>
+    <loc>{{ .Site.BaseURL }}about/</loc>
+    <lastmod>{{ now.Format "2006-01-02T15:04:05-07:00" | safeHTML }}</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>{{ .Site.BaseURL }}contact/</loc>
+    <lastmod>{{ now.Format "2006-01-02T15:04:05-07:00" | safeHTML }}</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  
+  <url>
+    <loc>{{ .Site.BaseURL }}privacy/</loc>
+    <lastmod>{{ now.Format "2006-01-02T15:04:05-07:00" | safeHTML }}</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.4</priority>
+  </url>
+  
+  <url>
+    <loc>{{ .Site.BaseURL }}youth-protection/</loc>
+    <lastmod>{{ now.Format "2006-01-02T15:04:05-07:00" | safeHTML }}</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.4</priority>
+  </url>
+  
+  <url>
+    <loc>{{ .Site.BaseURL }}editorial-guidelines/</loc>
+    <lastmod>{{ now.Format "2006-01-02T15:04:05-07:00" | safeHTML }}</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.4</priority>
+  </url>
+  
+  <url>
+    <loc>{{ .Site.BaseURL }}terms/</loc>
+    <lastmod>{{ now.Format "2006-01-02T15:04:05-07:00" | safeHTML }}</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.4</priority>
+  </url>
+
+  <!-- 아카이브 페이지 -->
+  <url>
+    <loc>{{ .Site.BaseURL }}archives/</loc>
+    <lastmod>{{ now.Format "2006-01-02T15:04:05-07:00" | safeHTML }}</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.6</priority>
+  </url>
+
+</urlset> 

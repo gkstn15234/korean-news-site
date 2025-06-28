@@ -1,0 +1,343 @@
+baseURL: "https://korean-news-sites.pages.dev"
+languageCode: "ko-KR"
+title: "한국 뉴스 🚀 자동배포 성공!"
+# theme: "PaperMod"  # 기존 테마 비활성화
+timeZone: "Asia/Seoul"
+
+# Hugo 설정
+defaultContentLanguage: 'ko'
+hasCJKLanguage: true
+
+enableRobotsTXT: true
+buildDrafts: false
+buildFuture: false
+buildExpired: false
+enableGitInfo: true
+
+minify:
+  minifyOutput: true
+  disableCSS: false
+  disableHTML: false
+  disableJS: false
+  disableJSON: false
+  disableSVG: false
+  disableXML: false
+
+publishDir: "public"
+
+# 빌드 최적화 설정
+build:
+  writeStats: true
+
+params:
+  env: production
+  title: "한국 뉴스 🚀 자동배포 확인중!"
+  description: "실시간 한국 뉴스와 심층 분석을 제공하는 전문 뉴스 사이트"
+  keywords: "한국뉴스, 실시간뉴스, 정치, 경제, 사회, 스포츠, 속보"
+  author: "한국뉴스 편집팀"
+  
+  # 뉴스 사이트 설정
+  newsKeywords: ["한국뉴스", "실시간뉴스", "속보", "정치", "경제", "사회", "스포츠"]
+  newsStandUrl: "https://news.google.com"
+  
+  # 카테고리를 영문으로 매핑
+  categoryMapping:
+    "정치": "politics"
+    "경제": "economy"
+    "사회": "society"
+    "스포츠": "sports"
+    "기술": "technology"
+    "IT": "technology"
+    "문화": "culture"
+  
+  # 사이트맵 설정
+  sitemaps:
+    - type: "news"
+      changefreq: "hourly"
+      priority: 1.0
+    - type: "pages"
+      changefreq: "monthly"
+      priority: 0.5
+    - type: "authors"
+      changefreq: "weekly"
+      priority: 0.7
+  
+  # 소셜 미디어 (선택사항)
+  # twitter: "your_twitter_handle"  # @ 없이 입력
+  # facebook: "your_facebook_page"
+  
+  # 사이트 로고
+  logo: "/images/logo.png"
+  
+  # 기본 이미지 (소셜 공유용)
+  default_image: "/images/default-news.jpg"
+  images: ["<link or path of image for opengraph, twitter-cards>"]
+  DateFormat: "2006년 1월 2일 15:04"
+  defaultTheme: auto
+  disableThemeToggle: false
+
+  # Korean Customizations
+
+  # Custom CSS Assets
+  assets:
+    disableHLJS: false
+    disableFingerprinting: true
+    favicon: "<link / abs url>"
+    favicon16x16: "<link / abs url>"
+    favicon32x32: "<link / abs url>"
+    apple_touch_icon: "<link / abs url>"
+    safari_pinned_tab: "<link / abs url>"
+
+  ShowReadingTime: true
+  ShowShareButtons: true
+  ShowPostNavLinks: true
+  ShowBreadCrumbs: true
+  ShowCodeCopyButtons: false
+  ShowWordCount: true
+  ShowRssButtonInSectionTermList: true
+  UseHugoToc: true
+  disableSpecial1stPost: false
+  disableScrollToTop: false
+  comments: false
+  hidemeta: false
+  hideSummary: false
+  showtoc: false
+  tocopen: false
+
+  assets:
+    # disableHLJS: true # to disable highlight.js
+    # disableFingerprinting: true
+    favicon: "<link / abs url>"
+    favicon16x16: "<link / abs url>"
+    favicon32x32: "<link / abs url>"
+    apple_touch_icon: "<link / abs url>"
+    safari_pinned_tab: "<link / abs url>"
+
+  label:
+    text: "한국 뉴스"
+    icon: /apple-touch-icon.png
+    iconHeight: 35
+
+  # home-info mode
+  homeInfoParams:
+    Title: "한국 뉴스에 오신 것을 환영합니다"
+    Content: >
+      최신 한국 뉴스를 정확하고 빠르게 전달합니다. 
+      정치, 경제, 사회, 스포츠, 연예 등 다양한 분야의 뉴스를 확인하세요.
+
+  socialIcons:
+    - name: twitter
+      url: "https://twitter.com/"
+    - name: facebook
+      url: "https://facebook.com/"
+    - name: youtube
+      url: "https://youtube.com/"
+    - name: rss
+      url: "index.xml"
+
+  analytics:
+    google:
+      SiteVerificationTag: "XYZabc"
+    bing:
+      SiteVerificationTag: "XYZabc"
+    yandex:
+      SiteVerificationTag: "XYZabc"
+
+  cover:
+    hidden: true # hide everywhere but not in structured data
+    hiddenInList: true # hide on list pages and home
+    hiddenInSingle: true # hide on single page
+
+  editPost:
+    URL: "https://github.com/<path_to_repo>/content"
+    Text: "Suggest Changes" # edit text
+    appendFilePath: true # to append file path to Edit link
+
+  # for search
+  # https://fusejs.io/api/options.html
+  fuseOpts:
+    isCaseSensitive: false
+    shouldSort: true
+    location: 0
+    distance: 1000
+    threshold: 0.4
+    minMatchCharLength: 0
+    keys: ["title", "permalink", "summary", "content"]
+
+# 언어 설정
+languages:
+  ko:
+    languageName: "한국어"
+    weight: 1
+    params:
+      author: "한국뉴스팀"
+      description: "최신 한국 뉴스를 빠르게 전달합니다"
+
+# 메뉴 설정
+menu:
+  main:
+    - identifier: home
+      name: 홈
+      url: /
+      weight: 10
+    - identifier: politics
+      name: 정치
+      url: /categories/정치/
+      weight: 20
+    - identifier: economy
+      name: 경제
+      url: /categories/경제/
+      weight: 30
+    - identifier: society
+      name: 사회
+      url: /categories/사회/
+      weight: 40
+    - identifier: sports
+      name: 스포츠
+      url: /categories/스포츠/
+      weight: 50
+    - identifier: entertainment
+      name: 연예
+      url: /categories/연예/
+      weight: 60
+    - identifier: archives
+      name: 아카이브
+      url: /archives/
+      weight: 70
+
+# Read: https://github.com/adityatelange/hugo-PaperMod/wiki/FAQs#using-hugos-syntax-highlighter-chroma
+pygmentsUseClasses: true
+markup:
+  goldmark:
+    renderer:
+      unsafe: true
+  highlight:
+    style: 'github'
+    lineNos: true
+    codeFences: true
+
+taxonomies:
+  category: categories
+  tag: tags
+  series: series
+
+privacy:
+  disqus:
+    disable: false
+  googleAnalytics:
+    anonymizeIP: true
+    disable: false
+    respectDoNotTrack: true
+    useSessionStorage: true
+  instagram:
+    disable: false
+    simple: true
+  twitter:
+    disable: false
+    enableDNT: true
+    simple: true
+  vimeo:
+    disable: false
+    enableDNT: true
+    simple: true
+  youtube:
+    disable: false
+    privacyEnhanced: true
+
+# 출력 형식 정의
+outputFormats:
+  sitemap-index:
+    mediaType: "application/xml"
+    baseName: "sitemap-index"
+    isHTML: false
+    isPlainText: false
+    noUgly: true
+  sitemap-pages:
+    mediaType: "application/xml"
+    baseName: "sitemap-pages"
+    isHTML: false
+    isPlainText: false
+    noUgly: true
+  sitemap-posts:
+    mediaType: "application/xml"
+    baseName: "sitemap-posts"
+    isHTML: false
+    isPlainText: false
+    noUgly: true
+  sitemap-news:
+    mediaType: "application/xml"
+    baseName: "sitemap-news"
+    isHTML: false
+    isPlainText: false
+    noUgly: true
+  sitemap-authors:
+    mediaType: "application/xml"
+    baseName: "sitemap-authors"
+    isHTML: false
+    isPlainText: false
+    noUgly: true
+  sitemap-local:
+    mediaType: "application/xml"
+    baseName: "sitemap-local"
+    isHTML: false
+    isPlainText: false
+    noUgly: true
+  sitemap-discover:
+    mediaType: "application/xml"
+    baseName: "sitemap-discover"
+    isHTML: false
+    isPlainText: false
+    noUgly: true
+
+# 미디어 타입 설정 (완전 자동화 이미지 시스템)
+mediaTypes:
+  "image/webp":
+    suffixes: ["webp"]
+
+# 출력 형식
+outputs:
+  home: ["HTML", "RSS", "JSON", "sitemap-index", "sitemap-pages", "sitemap-posts", "sitemap-news", "sitemap-authors", "sitemap-local", "sitemap-discover"]
+  page: ["HTML"]
+  section: ["HTML", "RSS"]
+
+# URL 구조 설정 - 모든 기사 통일된 구조
+permalinks:
+  posts: "/posts/:slug/"
+
+# 슬러그 설정
+removePathAccents: true
+disablePathToLower: false
+
+# 사이트맵 비활성화 (커스텀 사이트맵 사용)
+disableKinds: ["sitemap"]
+
+# 사이트맵 및 RSS 설정
+sitemap:
+  changefreq: "daily" 
+  priority: 0.8
+  filename: "sitemap.xml"
+
+# RSS 설정
+rss:
+  limit: 20
+
+services:
+  instagram:
+    disableInlineCSS: true
+  x:
+    disableInlineCSS: true
+
+# Core Web Vitals 최적화 설정 - 완전 자동화 이미지 시스템
+imaging:
+  # 리샘플링 필터 (고품질)
+  resampleFilter: "lanczos"
+  # 기본 품질 (85가 최적)
+  quality: 85
+  # 앵커 포인트 (스마트 크롭)
+  anchor: "smart"
+  # 배경색 (투명 배경 처리시)
+  bgColor: "#ffffff"
+  
+# 빌드 최적화
+build:
+  useResourceCacheWhen: "fallback" 

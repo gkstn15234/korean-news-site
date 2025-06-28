@@ -1,0 +1,28 @@
+{{/* Breaking News Banner Component */}}
+{{ $breaking_news := site.Params.breaking_news }}
+{{ if $breaking_news.enabled }}
+<div class="breaking-news-banner">
+  <span class="breaking-news-label">
+    <i class="fas fa-bolt" style="margin-right: 4px;"></i>
+    속보
+  </span>
+  <span class="breaking-news-text">
+    {{ if $breaking_news.link }}
+      <a href="{{ $breaking_news.link }}" style="color: white; text-decoration: none;">
+        {{ $breaking_news.text }}
+      </a>
+    {{ else }}
+      {{ $breaking_news.text }}
+    {{ end }}
+  </span>
+</div>
+
+<style>
+/* 모바일에서 속보 숨김 */
+@media (max-width: 768px) {
+    .breaking-news-banner {
+        display: none !important;
+    }
+}
+</style>
+{{ end }} 

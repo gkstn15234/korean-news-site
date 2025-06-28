@@ -1,0 +1,46 @@
+{{- printf "<?xml version=\"1.0\" encoding=\"utf-8\" standalone=\"yes\"?>" | safeHTML }}
+<sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  
+  <!-- 메인 사이트맵 -->
+  <sitemap>
+    <loc>{{ .Site.BaseURL }}sitemap.xml</loc>
+    <lastmod>{{ now.Format "2006-01-02T15:04:05-07:00" | safeHTML }}</lastmod>
+  </sitemap>
+
+  <!-- 페이지 사이트맵 -->
+  <sitemap>
+    <loc>{{ .Site.BaseURL }}sitemap-pages.xml</loc>
+    <lastmod>{{ now.Format "2006-01-02T15:04:05-07:00" | safeHTML }}</lastmod>
+  </sitemap>
+
+  <!-- 일반글 사이트맵 -->
+  <sitemap>
+    <loc>{{ .Site.BaseURL }}sitemap-posts.xml</loc>
+    <lastmod>{{ now.Format "2006-01-02T15:04:05-07:00" | safeHTML }}</lastmod>
+  </sitemap>
+
+  <!-- 뉴스 사이트맵 -->
+  <sitemap>
+    <loc>{{ .Site.BaseURL }}sitemap-news.xml</loc>
+    <lastmod>{{ now.Format "2006-01-02T15:04:05-07:00" | safeHTML }}</lastmod>
+  </sitemap>
+
+  <!-- Google Discover 전용 사이트맵 -->
+  <sitemap>
+    <loc>{{ .Site.BaseURL }}sitemap-discover.xml</loc>
+    <lastmod>{{ now.Format "2006-01-02T15:04:05-07:00" | safeHTML }}</lastmod>
+  </sitemap>
+
+  <!-- 기자 사이트맵 -->
+  <sitemap>
+    <loc>{{ .Site.BaseURL }}sitemap-authors.xml</loc>
+    <lastmod>{{ now.Format "2006-01-02T15:04:05-07:00" | safeHTML }}</lastmod>
+  </sitemap>
+
+  <!-- 로컬 사이트맵 -->
+  <sitemap>
+    <loc>{{ .Site.BaseURL }}sitemap-local.xml</loc>
+    <lastmod>{{ now.Format "2006-01-02T15:04:05-07:00" | safeHTML }}</lastmod>
+  </sitemap>
+
+</sitemapindex> 

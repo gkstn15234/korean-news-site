@@ -1,0 +1,48 @@
+{{/* Popular Articles Sidebar */}}
+<aside class="popular-articles">
+      <h3 class="popular-articles-title">
+        <svg class="icon" style="color: #ef4444; margin-right: 8px;"><use href="#icon-fire"></use></svg>
+        인기 기사
+    </h3>
+  
+  {{ $popularPosts := (where site.RegularPages "Type" "in" (slice "posts" "post")) }}
+  {{ $popularPosts = $popularPosts | first 5 }}
+  
+  {{ range $index, $page := $popularPosts }}
+  <a href="{{ $page.Permalink }}" class="popular-article-item">
+    <div class="popular-article-rank">{{ add $index 1 }}</div>
+    <div class="popular-article-content">
+      <div class="popular-article-title">{{ $page.Title }}</div>
+      <div class="popular-article-meta">
+        {{ if $page.Params.categories }}
+          {{ range first 1 $page.Params.categories }}
+            <span style="color: var(--theme); font-weight: 600;">{{ . }}</span>
+          {{ end }}
+        {{ end }}
+        <span style="margin: 0 6px; opacity: 0.5;">·</span>
+        <span>{{ $page.Date.Format "1월 2일" }}</span>
+        <span style="margin: 0 6px; opacity: 0.5;">·</span>
+        <span>{{ math.Round (div (countwords $page.Content) 200.0) }}분</span>
+      </div>
+    </div>
+  </a>
+  {{ end }}
+  
+  {{ if lt (len $popularPosts) 5 }}
+    {{/* 기사가 5개 미만일 때 임시 샘플 표시 */}}
+    {{ range seq (sub 5 (len $popularPosts)) }}
+      {{ $sampleIndex := add (len $popularPosts) . }}
+      <div class="popular-article-item" style="opacity: 0.5;">
+        <div class="popular-article-rank">{{ $sampleIndex }}</div>
+        <div class="popular-article-content">
+          <div class="popular-article-title">더 많은 뉴스가 곧 업데이트됩니다</div>
+          <div class="popular-article-meta">
+            <span style="color: var(--theme); font-weight: 600;">일반</span>
+            <span style="margin: 0 6px; opacity: 0.5;">·</span>
+            <span>업데이트 예정</span>
+          </div>
+        </div>
+      </div>
+    {{ end }}
+  {{ end }}
+</aside> 

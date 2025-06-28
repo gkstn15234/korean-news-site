@@ -1,0 +1,165 @@
+{{- printf "<?xml version=\"1.0\" encoding=\"utf-8\" standalone=\"yes\"?>" | safeHTML }}
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+        xmlns:news="http://www.google.com/schemas/sitemap-news/0.9"
+        xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
+  
+  <!-- Google Discover 최적화 뉴스 기사들 (최근 24시간 내) -->
+  {{ $oneDayAgo := now.AddDate 0 0 -1 }}
+  {{ $twoDaysAgo := now.AddDate 0 0 -2 }}
+  
+  {{ range .Site.RegularPages }}
+    {{ if and (not .Draft) (eq .Section "posts") (.Date.After $oneDayAgo) }}
+    <url>
+      <loc>{{ .Permalink }}</loc>
+      <lastmod>{{ .Date.Format "2006-01-02T15:04:05-07:00" | safeHTML }}</lastmod>
+      
+      <!-- Google News 메타데이터 (Discover 최적화) -->
+      <news:news>
+        <news:publication>
+          <news:name>{{ $.Site.Title }}</news:name>
+          <news:language>ko</news:language>
+        </news:publication>
+        <news:publication_date>{{ .Date.Format "2006-01-02T15:04:05-07:00" | safeHTML }}</news:publication_date>
+        <news:title>{{ .Title }}</news:title>
+        {{ if .Params.tags }}
+        <news:keywords>{{ delimit .Params.tags ", " }}</news:keywords>
+        {{ end }}
+        {{ if .Params.discover_genres }}
+        <news:genres>{{ delimit .Params.discover_genres ", " }}</news:genres>
+        {{ else }}
+        <news:genres>PressRelease</news:genres>
+        {{ end }}
+      </news:news>
+
+      <!-- 고품질 이미지 정보 (Discover 필수) -->
+      {{ if .Params.featured_image }}
+      <image:image>
+        <image:loc>{{ .Params.featured_image | absURL }}</image:loc>
+        <image:caption>{{ .Params.image_caption | default .Title }}</image:caption>
+        <image:title>{{ .Title }}</image:title>
+        <image:license>{{ .Params.image_license | default "© 한국뉴스" }}</image:license>
+        <image:geo_location>{{ .Params.image_location | default "서울, 대한민국" }}</image:geo_location>
+      </image:image>
+      {{ else }}
+      <!-- 기본 이미지 (featured_image가 없는 경우) -->
+      <image:image>
+        <image:loc>{{ "images/default-news.jpg" | absURL }}</image:loc>
+        <image:caption>{{ .Title }}</image:caption>
+        <image:title>{{ .Title }}</image:title>
+        <image:license>© 한국뉴스</image:license>
+        <image:geo_location>서울, 대한민국</image:geo_location>
+      </image:image>
+      {{ end }}
+
+      <changefreq>hourly</changefreq>
+      <priority>1.0</priority>
+    </url>
+    {{ end }}
+  {{ end }}
+
+  <!-- 인기 기사들 (최근 2일 내 + 높은 조회수) -->
+  {{ range .Site.RegularPages }}
+    {{ if and (not .Draft) (eq .Section "posts") (.Date.After $twoDaysAgo) (.Params.popular) }}
+    <url>
+      <loc>{{ .Permalink }}</loc>
+      <lastmod>{{ .Date.Format "2006-01-02T15:04:05-07:00" | safeHTML }}</lastmod>
+      
+      <news:news>
+        <news:publication>
+          <news:name>{{ $.Site.Title }}</news:name>
+          <news:language>ko</news:language>
+        </news:publication>
+        <news:publication_date>{{ .Date.Format "2006-01-02T15:04:05-07:00" | safeHTML }}</news:publication_date>
+        <news:title>[인기] {{ .Title }}</news:title>
+        {{ if .Params.tags }}
+        <news:keywords>인기기사, {{ delimit .Params.tags ", " }}</news:keywords>
+        {{ end }}
+        <news:genres>OpEd</news:genres>
+      </news:news>
+
+      {{ if .Params.featured_image }}
+      <image:image>
+        <image:loc>{{ .Params.featured_image | absURL }}</image:loc>
+        <image:caption>[인기] {{ .Params.image_caption | default .Title }}</image:caption>
+        <image:title>[인기] {{ .Title }}</image:title>
+        <image:license>© 한국뉴스</image:license>
+      </image:image>
+      {{ end }}
+
+      <changefreq>hourly</changefreq>
+      <priority>0.9</priority>
+    </url>
+    {{ end }}
+  {{ end }}
+
+  <!-- 속보 기사들 (긴급 + 실시간) -->
+  {{ range .Site.RegularPages }}
+    {{ if and (not .Draft) (eq .Section "posts") (.Params.breaking) }}
+    <url>
+      <loc>{{ .Permalink }}</loc>
+      <lastmod>{{ .Date.Format "2006-01-02T15:04:05-07:00" | safeHTML }}</lastmod>
+      
+      <news:news>
+        <news:publication>
+          <news:name>{{ $.Site.Title }}</news:name>
+          <news:language>ko</news:language>
+        </news:publication>
+        <news:publication_date>{{ .Date.Format "2006-01-02T15:04:05-07:00" | safeHTML }}</news:publication_date>
+        <news:title>[속보] {{ .Title }}</news:title>
+        {{ if .Params.tags }}
+        <news:keywords>속보, 긴급, {{ delimit .Params.tags ", " }}</news:keywords>
+        {{ end }}
+        <news:genres>PressRelease</news:genres>
+      </news:news>
+
+      {{ if .Params.featured_image }}
+      <image:image>
+        <image:loc>{{ .Params.featured_image | absURL }}</image:loc>
+        <image:caption>[속보] {{ .Params.image_caption | default .Title }}</image:caption>
+        <image:title>[속보] {{ .Title }}</image:title>
+        <image:license>© 한국뉴스</image:license>
+      </image:image>
+      {{ end }}
+
+      <changefreq>always</changefreq>
+      <priority>1.0</priority>
+    </url>
+    {{ end }}
+  {{ end }}
+
+  <!-- 트렌딩 토픽 기사들 -->
+  {{ range .Site.RegularPages }}
+    {{ if and (not .Draft) (eq .Section "posts") (.Params.trending) }}
+    <url>
+      <loc>{{ .Permalink }}</loc>
+      <lastmod>{{ .Date.Format "2006-01-02T15:04:05-07:00" | safeHTML }}</lastmod>
+      
+      <news:news>
+        <news:publication>
+          <news:name>{{ $.Site.Title }}</news:name>
+          <news:language>ko</news:language>
+        </news:publication>
+        <news:publication_date>{{ .Date.Format "2006-01-02T15:04:05-07:00" | safeHTML }}</news:publication_date>
+        <news:title>[트렌드] {{ .Title }}</news:title>
+        {{ if .Params.tags }}
+        <news:keywords>트렌드, 화제, {{ delimit .Params.tags ", " }}</news:keywords>
+        {{ end }}
+        <news:genres>Blog</news:genres>
+      </news:news>
+
+      {{ if .Params.featured_image }}
+      <image:image>
+        <image:loc>{{ .Params.featured_image | absURL }}</image:loc>
+        <image:caption>[트렌드] {{ .Params.image_caption | default .Title }}</image:caption>
+        <image:title>[트렌드] {{ .Title }}</image:title>
+        <image:license>© 한국뉴스</image:license>
+      </image:image>
+      {{ end }}
+
+      <changefreq>daily</changefreq>
+      <priority>0.8</priority>
+    </url>
+    {{ end }}
+  {{ end }}
+
+</urlset> 

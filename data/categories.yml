@@ -1,0 +1,42 @@
+categories:
+  - name: "정치"
+    slug: "politics"
+    icon: "🏛️"
+    color: "#3182ce"
+    description: "국정감사, 정당, 정책 등 정치 관련 뉴스"
+    active: true
+  
+  - name: "경제"
+    slug: "economy"
+    icon: "📈"
+    color: "#38a169"
+    description: "증시, 부동산, 기업, 금융 등 경제 관련 뉴스"
+    active: true
+  
+  - name: "사회"
+    slug: "society"
+    icon: "👥"
+    color: "#805ad5"
+    description: "교육, 복지, 문화, 환경 등 사회 관련 뉴스"
+    active: true
+  
+  - name: "스포츠"
+    slug: "sports"
+    icon: "⚽"
+    color: "#e53e3e"
+    description: "축구, 야구, 올림픽 등 스포츠 관련 뉴스"
+    active: true
+  
+  - name: "기술"
+    slug: "technology"
+    icon: "💻"
+    color: "#6366f1"
+    description: "IT, AI, 스타트업 등 기술 관련 뉴스"
+    active: true
+  
+  - name: "연예"
+    slug: "entertainment"
+    icon: "⭐"
+    color: "#dd6b20"
+    description: "영화, 드라마, K-POP 등 연예 관련 뉴스"
+    active: true 

@@ -1,0 +1,23 @@
+{{ if site.Data.sitemap.image_sitemap }}
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+        xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
+  {{ range where site.RegularPages "Type" "posts" }}
+    {{ if and (not .Params.draft) .Params.featured_image }}
+    <url>
+      <loc>{{ .Permalink }}</loc>
+      <image:image>
+        <image:loc>{{ .Params.featured_image | absURL }}</image:loc>
+        <image:title><![CDATA[{{ .Title }}]]></image:title>
+        {{ if .Params.image_caption }}
+        <image:caption><![CDATA[{{ .Params.image_caption }}]]></image:caption>
+        {{ end }}
+        {{ if .Params.categories }}
+        <image:license>{{ delimit .Params.categories ", " }}</image:license>
+        {{ end }}
+      </image:image>
+    </url>
+    {{ end }}
+  {{ end }}
+</urlset>
+{{ end }} 

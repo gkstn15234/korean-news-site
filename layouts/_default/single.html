@@ -1,0 +1,646 @@
+{{- define "main" }}
+
+<article class="article-container">
+    <!-- 브레드크럼 네비게이션 -->
+    <nav class="breadcrumb-nav">
+        <a href="/" class="breadcrumb-link">
+            <svg class="icon icon-sm"><use href="#icon-home"></use></svg>홈
+        </a>
+        <span class="breadcrumb-separator">›</span>
+        {{ if .Params.categories }}
+            {{ range first 1 .Params.categories }}
+                <a href="/categories/{{ . | urlize }}/" class="breadcrumb-link">{{ . }}</a>
+                <span class="breadcrumb-separator">›</span>
+            {{ end }}
+        {{ end }}
+        <span class="breadcrumb-current">{{ .Title }}</span>
+    </nav>
+
+    <!-- 기사 헤더 -->
+    <header class="article-header">
+        <h1 class="article-title">{{ .Title }}</h1>
+        
+        <!-- 카테고리 배지 (동적 색상 적용) -->
+        <div class="article-categories">
+            {{ if .Params.categories }}
+                {{ range .Params.categories }}
+                    {{ $currentCategory := . }}
+                    {{ $categoryData := "" }}
+                    {{ range site.Data.categories.categories }}
+                        {{ if eq .name $currentCategory }}
+                            {{ $categoryData = . }}
+                        {{ end }}
+                    {{ end }}
+                    {{ if $categoryData }}
+                        <a href="/categories/{{ $categoryData.slug }}/" 
+                           class="category-badge category-{{ $categoryData.slug }}">
+                            {{ $categoryData.icon }} {{ $currentCategory }}
+                        </a>
+                    {{ else }}
+                        <a href="/categories/{{ $currentCategory | urlize }}/" class="category-badge">{{ $currentCategory }}</a>
+                    {{ end }}
+                {{ end }}
+            {{ end }}
+        </div>
+        
+        <!-- 기사 메타 정보 -->
+        <div class="article-meta">
+            <span class="article-date">
+                <svg class="icon icon-sm"><use href="#icon-calendar"></use></svg>
+                {{ .Date.Format "2006년 1월 2일" }}
+            </span>
+            <span class="article-reading-time">
+                <svg class="icon icon-sm"><use href="#icon-clock"></use></svg>
+                읽는 시간: {{ math.Round (div (countwords .Content) 200.0) }}분
+            </span>
+            {{ if .Params.author }}
+            <span class="article-author">
+                <svg class="icon icon-sm"><use href="#icon-users"></use></svg>
+                {{ .Params.author }}
+            </span>
+            {{ end }}
+        </div>
+    </header>
+
+    <!-- 피처드 이미지 -->
+    {{ if .Params.featured_image }}
+    <div class="article-featured-image">
+        {{ partial "auto-optimized-image.html" (dict "image" .Params.featured_image "alt" .Title "class" "featured-image") }}
+        {{ if .Params.image_caption }}
+        <figcaption class="image-caption">{{ .Params.image_caption }}</figcaption>
+        {{ end }}
+    </div>
+    {{ end }}
+
+    <!-- 기사 본문 -->
+    <div class="article-content">
+        <!-- 리드 문구 -->
+        {{ if .Params.lead }}
+        <div class="article-lead">{{ .Params.lead }}</div>
+        {{ else if .Params.description }}
+        <div class="article-lead">{{ .Params.description }}</div>
+        {{ end }}
+
+        <!-- 소셜 공유 버튼 -->
+        {{ partial "social-sharing.html" . }}
+
+        <!-- 본문 내용 -->
+        <div class="entry-content">
+            {{ .Content }}
+        </div>
+    </div>
+
+    <!-- 기자 정보 -->
+    {{ if .Params.author }}
+    <div class="author-info">
+        <div class="author-content">
+            <svg class="icon icon-xl"><use href="#icon-users"></use></svg>
+            <div class="author-details">
+                <div class="author-name">{{ .Params.author }}</div>
+                {{ if .Params.author_email }}
+                <div class="author-email">
+                    <a href="mailto:{{ .Params.author_email }}">{{ .Params.author_email }}</a>
+                </div>
+                {{ end }}
+                {{ if .Params.author_description }}
+                <div class="author-description">{{ .Params.author_description }}</div>
+                {{ end }}
+            </div>
+        </div>
+    </div>
+    {{ end }}
+
+    <!-- 태그 -->
+    {{ if .Params.tags }}
+    <div class="article-tags">
+        <h3 class="tags-title">
+            <svg class="icon"><use href="#icon-hashtag"></use></svg>
+            관련 태그
+        </h3>
+        <div class="tags-list">
+            {{ range .Params.tags }}
+            <a href="/tags/{{ . | urlize }}/" class="tag-link">#{{ . }}</a>
+            {{ end }}
+        </div>
+    </div>
+    {{ end }}
+
+    <!-- 이전/다음 기사 -->
+    {{ if or .NextInSection .PrevInSection }}
+    <nav class="article-navigation">
+        {{ if .PrevInSection }}
+        <a href="{{ .PrevInSection.Permalink }}" class="nav-link nav-prev">
+            <div class="nav-label">
+                <svg class="icon"><use href="#icon-arrow-left"></use></svg>
+                이전 기사
+            </div>
+            <div class="nav-title">{{ .PrevInSection.Title }}</div>
+        </a>
+        {{ else }}
+        <div class="nav-spacer"></div>
+        {{ end }}
+        
+        {{ if .NextInSection }}
+        <a href="{{ .NextInSection.Permalink }}" class="nav-link nav-next">
+            <div class="nav-label">
+                다음 기사
+                <svg class="icon"><use href="#icon-arrow-right"></use></svg>
+            </div>
+            <div class="nav-title">{{ .NextInSection.Title }}</div>
+        </a>
+        {{ end }}
+    </nav>
+    {{ end }}
+</article>
+
+<style>
+/* 기사 페이지 모바일 최적화 스타일 */
+.article-container {
+    background: transparent;
+    min-height: 70vh;
+}
+
+/* 브레드크럼 */
+.breadcrumb-nav {
+    padding: 12px 20px;
+    border-bottom: 1px solid var(--border-color);
+    font-size: 0.9rem;
+    color: var(--text-light);
+}
+
+.breadcrumb-link {
+    color: var(--text-light);
+    text-decoration: none;
+    transition: color 0.2s ease;
+}
+
+.breadcrumb-link:hover {
+    color: var(--primary-color);
+}
+
+.breadcrumb-separator {
+    margin: 0 8px;
+    color: var(--text-light);
+}
+
+.breadcrumb-current {
+    color: var(--primary-color);
+    font-weight: 600;
+}
+
+/* 기사 헤더 */
+.article-header {
+    padding: 25px 20px;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.article-title {
+    font-size: 2.2rem;
+    font-weight: 800;
+    line-height: 1.3;
+    margin-bottom: 20px;
+    color: var(--primary-color);
+    word-break: keep-all;
+}
+
+.article-categories {
+    margin-bottom: 15px;
+}
+
+.category-badge {
+    display: inline-block;
+    padding: 6px 14px;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: white;
+    margin-right: 8px;
+    margin-bottom: 8px;
+}
+
+/* 동적 카테고리 색상이 인라인으로 적용됨 */
+.category-badge {
+    background: #6366f1; /* 기본 색상 */
+}
+
+.article-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+    color: var(--text-light);
+    font-size: 0.9rem;
+}
+
+.article-meta i {
+    margin-right: 5px;
+    opacity: 0.8;
+}
+
+/* 피처드 이미지 */
+.article-featured-image {
+    width: 100%;
+    margin: 0;
+}
+
+.article-featured-image img {
+    width: 100%;
+    height: auto;
+    display: block;
+    object-fit: cover;
+}
+
+.image-caption {
+    padding: 15px 20px;
+    font-size: 0.9rem;
+    color: var(--text-light);
+    text-align: center;
+    font-style: italic;
+    background: #f8f9fa;
+    border-bottom: 1px solid var(--border-color);
+}
+
+/* 기사 본문 */
+.article-content {
+    padding: 20px;
+}
+
+.article-lead {
+    font-size: 1.3rem;
+    font-weight: 600;
+    line-height: 1.6;
+    color: var(--text-color);
+    margin-bottom: 25px;
+    padding-bottom: 20px;
+    border-bottom: 2px solid var(--accent-color);
+}
+
+.entry-content {
+    font-size: 1.1rem;
+    line-height: 1.8;
+    color: var(--text-color);
+    margin-bottom: 30px;
+}
+
+.entry-content h2 {
+    font-size: 1.7rem;
+    font-weight: 700;
+    color: var(--primary-color);
+    margin: 35px 0 20px 0;
+    padding-bottom: 10px;
+    border-bottom: 2px solid var(--accent-color);
+}
+
+.entry-content h5 {
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: var(--text-color);
+    margin: 25px 0 15px 0;
+    line-height: 1.5;
+}
+
+.entry-content p {
+    margin-bottom: 20px;
+    line-height: 1.8;
+}
+
+.entry-content figure {
+    margin: 25px 0;
+    text-align: center;
+}
+
+.entry-content figure img {
+    width: 100%;
+    height: auto;
+    object-fit: contain;
+    display: block;
+    margin: 0 auto;
+}
+
+.entry-content figcaption {
+    padding: 12px 20px;
+    font-size: 0.85rem;
+    color: var(--text-light);
+    text-align: center;
+    font-style: italic;
+    background: #f8f9fa;
+    margin-top: 5px;
+}
+
+/* 기자 정보 */
+.author-info {
+    margin: 30px 20px;
+    padding: 20px;
+    background: var(--bg-light);
+    border-radius: 8px;
+    border-left: 4px solid var(--accent-color);
+}
+
+.author-content {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+}
+
+.author-content i {
+    color: var(--accent-color);
+    font-size: 1.3rem;
+    margin-top: 2px;
+}
+
+.author-name {
+    font-weight: 600;
+    color: var(--primary-color);
+    margin-bottom: 5px;
+}
+
+.author-email a {
+    color: var(--text-light);
+    text-decoration: none;
+    font-size: 0.9rem;
+}
+
+.author-description {
+    font-size: 0.9rem;
+    color: var(--text-light);
+    margin-top: 5px;
+}
+
+/* 태그 */
+.article-tags {
+    margin: 30px 20px;
+    padding-top: 20px;
+    border-top: 1px solid var(--border-color);
+}
+
+.tags-title {
+    font-size: 1.1rem;
+    font-weight: 700;
+    margin-bottom: 15px;
+    color: var(--primary-color);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.tags-title i {
+    color: var(--accent-color);
+}
+
+.tags-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.tag-link {
+    background: var(--bg-light);
+    color: var(--primary-color);
+    padding: 8px 15px;
+    border-radius: 20px;
+    text-decoration: none;
+    font-size: 0.9rem;
+    font-weight: 500;
+    transition: all 0.2s ease;
+    border: 1px solid var(--border-color);
+}
+
+.tag-link:hover {
+    background: var(--primary-color);
+    color: white;
+    transform: translateY(-1px);
+}
+
+/* 이전/다음 기사 */
+.article-navigation {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 15px;
+    margin: 30px 20px 20px;
+    padding-top: 20px;
+    border-top: 1px solid var(--border-color);
+}
+
+.nav-link {
+    background: var(--bg-light);
+    padding: 20px;
+    border-radius: 10px;
+    text-decoration: none;
+    border: 1px solid var(--border-color);
+    transition: all 0.2s ease;
+    display: block;
+}
+
+.nav-link:hover {
+    background: white;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    transform: translateY(-2px);
+}
+
+.nav-next {
+    text-align: right;
+}
+
+.nav-label {
+    color: var(--text-light);
+    font-size: 0.9rem;
+    margin-bottom: 8px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.nav-next .nav-label {
+    justify-content: flex-end;
+}
+
+.nav-title {
+    color: var(--primary-color);
+    font-weight: 600;
+    line-height: 1.4;
+    font-size: 0.95rem;
+}
+
+.nav-spacer {
+    /* 이전 기사가 없을 때 공간 유지 */
+}
+
+/* 모바일 최적화 (768px 이하) */
+@media (max-width: 768px) {
+    .article-container {
+        margin: 0;
+        border-radius: 0;
+    }
+    
+    .breadcrumb-nav {
+        padding: 10px 15px;
+        font-size: 0.8rem;
+    }
+    
+    .breadcrumb-separator {
+        margin: 0 5px;
+    }
+    
+    .article-header {
+        padding: 20px 15px;
+    }
+    
+    .article-title {
+        font-size: 1.6rem;
+        line-height: 1.4;
+        margin-bottom: 15px;
+    }
+    
+    .article-categories {
+        margin-bottom: 12px;
+    }
+    
+    .category-badge {
+        font-size: 0.7rem;
+        padding: 4px 10px;
+        margin-right: 6px;
+        margin-bottom: 6px;
+    }
+    
+    .article-meta {
+        gap: 10px;
+        font-size: 0.8rem;
+    }
+    
+    .image-caption {
+        padding: 10px 15px;
+        font-size: 0.8rem;
+    }
+    
+    .article-content {
+        padding: 15px;
+    }
+    
+    .article-lead {
+        font-size: 1.1rem;
+        margin-bottom: 20px;
+        padding-bottom: 15px;
+    }
+    
+    .entry-content {
+        font-size: 1rem;
+        line-height: 1.7;
+        margin-bottom: 25px;
+    }
+    
+    .entry-content h2 {
+        font-size: 1.4rem;
+        margin: 25px 0 15px 0;
+    }
+    
+    .entry-content h5 {
+        font-size: 1.1rem;
+        margin: 20px 0 12px 0;
+    }
+    
+    .entry-content p {
+        margin-bottom: 16px;
+    }
+    
+    .entry-content figure {
+        margin: 20px 0;
+    }
+    
+    .entry-content figcaption {
+        padding: 10px 15px;
+        font-size: 0.8rem;
+    }
+    
+    .author-info {
+        margin: 25px 15px;
+        padding: 15px;
+    }
+    
+    .author-content {
+        gap: 10px;
+    }
+    
+    .author-content i {
+        font-size: 1.2rem;
+    }
+    
+    .article-tags {
+        margin: 25px 15px;
+    }
+    
+    .tag-link {
+        padding: 6px 12px;
+        font-size: 0.8rem;
+    }
+    
+    .article-navigation {
+        grid-template-columns: 1fr;
+        gap: 10px;
+        margin: 25px 15px 15px;
+    }
+    
+    .nav-link {
+        padding: 15px;
+        text-align: left !important;
+    }
+    
+    .nav-next .nav-label {
+        justify-content: flex-start;
+    }
+    
+    .nav-label {
+        font-size: 0.8rem;
+        margin-bottom: 6px;
+    }
+    
+    .nav-title {
+        font-size: 0.9rem;
+    }
+}
+
+/* 매우 작은 모바일 (360px 이하) */
+@media (max-width: 360px) {
+    .breadcrumb-nav {
+        padding: 8px 12px;
+        font-size: 0.75rem;
+    }
+    
+    .article-header {
+        padding: 15px 12px;
+    }
+    
+    .article-title {
+        font-size: 1.4rem;
+    }
+    
+    .article-content {
+        padding: 12px;
+    }
+    
+    .article-lead {
+        font-size: 1rem;
+    }
+    
+    .entry-content {
+        font-size: 0.95rem;
+    }
+    
+    .entry-content h2 {
+        font-size: 1.2rem;
+    }
+    
+    .author-info, .article-tags {
+        margin: 20px 12px;
+        padding: 12px;
+    }
+    
+    .article-navigation {
+        margin: 20px 12px 12px;
+    }
+    
+    .nav-link {
+        padding: 12px;
+    }
+}
+</style>
+
+{{- end }} 

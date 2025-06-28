@@ -1,0 +1,65 @@
+journalists:
+  - name: "김정치"
+    department: "정치부"
+    email: "politics@koreanews.com"
+    phone: "02-1234-5678"
+    bio: "10년차 정치부 기자로 국정감사와 정당 정책을 전문으로 취재합니다."
+    specialties:
+      - "국정감사"
+      - "정당정책"
+      - "선거"
+    active: true
+  
+  - name: "박경제"
+    department: "경제부"
+    email: "economy@koreanews.com"
+    phone: "02-1234-5679"
+    bio: "증시와 부동산 전문 기자로 경제 동향을 깊이 있게 분석합니다."
+    specialties:
+      - "증시분석"
+      - "부동산"
+      - "기업경영"
+    active: true
+  
+  - name: "이사회"
+    department: "사회부"
+    email: "society@koreanews.com"
+    phone: "02-1234-5680"
+    bio: "교육과 복지 정책을 중심으로 사회 이슈를 다루는 기자입니다."
+    specialties:
+      - "교육정책"
+      - "사회복지"
+      - "환경"
+    active: true
+  
+  - name: "최스포츠"
+    department: "스포츠부"
+    email: "sports@koreanews.com"
+    phone: "02-1234-5681"
+    bio: "축구와 야구를 전문으로 하는 스포츠 전문 기자입니다."
+    specialties:
+      - "축구"
+      - "야구"
+      - "올림픽"
+    active: true
+  
+  - name: "정기술"
+    department: "IT부"
+    email: "tech@koreanews.com"
+    phone: "02-1234-5682"
+    bio: "AI와 스타트업 생태계를 전문으로 다루는 IT 기자입니다."
+    specialties:
+      - "인공지능"
+      - "스타트업"
+      - "빅테크"
+    active: true
+  
+  - name: "한국뉴스팀"
+    department: "편집부"
+    email: "news@koreanews.com"
+    phone: "02-1234-5600"
+    bio: "한국뉴스 편집팀에서 다양한 뉴스를 제공합니다."
+    specialties:
+      - "종합뉴스"
+      - "속보"
+    active: true 

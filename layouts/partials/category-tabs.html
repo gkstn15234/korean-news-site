@@ -1,0 +1,42 @@
+{{/* Category Tabs Navigation */}}
+<nav class="category-tabs" aria-label="카테고리 네비게이션">
+  <a href="/" class="category-tab {{ if .IsHome }}active{{ end }}">
+    <svg class="icon icon-sm" style="margin-right: 6px;"><use href="#icon-home"></use></svg>
+    전체
+  </a>
+  
+  {{ $currentCategory := "" }}
+  {{ if .Params.categories }}
+    {{ $currentCategory = index .Params.categories 0 }}
+  {{ end }}
+  
+  <a href="/categories/정치/" class="category-tab {{ if eq $currentCategory "정치" }}active{{ end }}">
+    <svg class="icon icon-sm" style="margin-right: 6px;"><use href="#icon-landmark"></use></svg>
+    정치
+  </a>
+  
+  <a href="/categories/경제/" class="category-tab {{ if eq $currentCategory "경제" }}active{{ end }}">
+    <svg class="icon icon-sm" style="margin-right: 6px;"><use href="#icon-chart-line"></use></svg>
+    경제
+  </a>
+  
+  <a href="/categories/사회/" class="category-tab {{ if eq $currentCategory "사회" }}active{{ end }}">
+    <svg class="icon icon-sm" style="margin-right: 6px;"><use href="#icon-users"></use></svg>
+    사회
+  </a>
+  
+  <a href="/categories/스포츠/" class="category-tab {{ if eq $currentCategory "스포츠" }}active{{ end }}">
+    <svg class="icon icon-sm" style="margin-right: 6px;"><use href="#icon-futbol"></use></svg>
+    스포츠
+  </a>
+  
+  <a href="/categories/연예/" class="category-tab {{ if eq $currentCategory "연예" }}active{{ end }}">
+    <svg class="icon icon-sm" style="margin-right: 6px;"><use href="#icon-star"></use></svg>
+    연예
+  </a>
+  
+  <a href="/archives/" class="category-tab">
+    <svg class="icon icon-sm" style="margin-right: 6px;"><use href="#icon-archive"></use></svg>
+    아카이브
+  </a>
+</nav> 

@@ -1,0 +1,60 @@
+{{/* Korean News Card Component */}}
+{{ $page := . }}
+<article class="news-card">
+  {{ if $page.Params.featured_image }}
+  <div class="news-card-image-wrapper">
+    {{ partial "auto-optimized-image.html" (dict "image" $page.Params.featured_image "alt" $page.Title "class" "card-image") }}
+  </div>
+  {{ end }}
+  
+  <div class="news-card-content">
+    <div class="news-card-meta">
+      {{ if $page.Params.categories }}
+        {{ range $page.Params.categories }}
+          {{ $category_class := "category-badge" }}
+          {{ if eq . "정치" }}{{ $category_class = "category-badge politics" }}{{ end }}
+          {{ if eq . "경제" }}{{ $category_class = "category-badge economy" }}{{ end }}
+          {{ if eq . "사회" }}{{ $category_class = "category-badge society" }}{{ end }}
+          {{ if eq . "스포츠" }}{{ $category_class = "category-badge sports" }}{{ end }}
+          {{ if eq . "연예" }}{{ $category_class = "category-badge entertainment" }}{{ end }}
+          <a href="/categories/{{ . | urlize }}/" class="{{ $category_class }}">{{ . }}</a>
+        {{ end }}
+      {{ end }}
+      
+      <span class="news-date">
+        <svg class="icon icon-sm" style="margin-right: 4px; opacity: 0.7;"><use href="#icon-calendar"></use></svg>
+        {{ $page.Date.Format "2006년 1월 2일" }}
+      </span>
+      
+      <span class="reading-time">
+        <svg class="icon icon-sm" style="margin-right: 4px; opacity: 0.7;"><use href="#icon-clock"></use></svg>
+        읽는 시간: {{ math.Round (div (countwords $page.Content) 200.0) }}분
+      </span>
+    </div>
+    
+    <a href="{{ $page.Permalink }}" class="news-card-title">
+      {{ $page.Title }}
+    </a>
+    
+    <div class="news-card-summary">
+      {{ if $page.Params.description }}
+        {{ $page.Params.description }}
+      {{ else }}
+        {{ $page.Summary }}
+      {{ end }}
+    </div>
+    
+    <div class="news-card-footer">
+      <span class="news-author">
+        {{ if $page.Params.author }}
+          {{ $page.Params.author }}
+        {{ else }}
+          한국뉴스팀
+        {{ end }}
+      </span>
+      <a href="{{ $page.Permalink }}" class="read-more-btn">
+        자세히 읽기 →
+      </a>
+    </div>
+  </div>
+</article> 

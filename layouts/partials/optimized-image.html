@@ -1,0 +1,48 @@
+{{ $image := .image }}
+{{ $alt := .alt | default "뉴스 이미지" }}
+{{ $class := .class | default "news-image" }}
+
+{{ if $image }}
+  {{ if or (hasPrefix $image "http://") (hasPrefix $image "https://") }}
+    <!-- 외부 이미지 URL -->
+    <img src="{{ $image }}" 
+         alt="{{ $alt }}" 
+         loading="lazy"
+         decoding="async"
+         class="{{ $class }}"
+         width="1200" 
+         height="630">
+  {{ else }}
+    {{ $img := resources.Get $image }}
+    {{ if $img }}
+      <!-- 로컬 이미지 - WebP 지원 브라우저용 -->
+      <picture class="{{ $class }}">
+        <source srcset="{{ ($img.Resize "1200x630 webp").Permalink }}" type="image/webp">
+        <source srcset="{{ ($img.Resize "800x420 webp").Permalink }}" type="image/webp" media="(max-width: 768px)">
+        <img src="{{ ($img.Resize "1200x630").Permalink }}" 
+             alt="{{ $alt }}" 
+             loading="lazy"
+             decoding="async"
+             width="1200" 
+             height="630">
+      </picture>
+    {{ else }}
+      <!-- 정적 이미지 -->
+      <img src="{{ $image | absURL }}" 
+           alt="{{ $alt }}" 
+           loading="lazy"
+           decoding="async"
+           class="{{ $class }}"
+           width="1200" 
+           height="630">
+    {{ end }}
+  {{ end }}
+{{ else }}
+  <!-- 기본 이미지 -->
+  <img src="{{ "images/default-news.jpg" | absURL }}" 
+       alt="기본 뉴스 이미지" 
+       loading="lazy"
+       class="{{ $class }}"
+       width="1200" 
+       height="630">
+{{ end }} 

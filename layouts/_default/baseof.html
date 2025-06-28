@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    
+    <!-- Resource Hints (가장 먼저) -->
+    {{ partial "resource-hints.html" . }}
+    
+    <!-- Critical CSS (인라인) -->
+    {{ partial "critical-css.html" . }}
+    
+    <!-- 완벽한 메타 태그 시스템 -->
+    {{ partial "meta-tags.html" . }}
+    
+    <!-- 페이지별 타이틀 -->
+    <title>{{ if .IsHome }}{{ .Site.Title }} - {{ .Site.Params.description }}{{ else }}{{ .Title }} | {{ .Site.Title }}{{ end }}</title>
+    
+    <!-- 비동기 CSS 로딩 (렌더링 차단 최소화) -->
+    {{ partial "async-css.html" . }}
+    
+    <!-- 구조화된 데이터 -->
+    {{ if not .IsHome }}
+    {{ partial "structured-data.html" . }}
+    {{ end }}
+    
+    <!-- 회사 위치 정보 구조화된 데이터 -->
+    {{ partial "local-business-schema.html" . }}
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/x-icon" href="/favicon.ico">
+    
+    <!-- RSS Feed -->
+    {{ with .OutputFormats.Get "rss" }}
+    <link rel="alternate" type="application/rss+xml" title="{{ $.Site.Title }}" href="{{ .Permalink }}">
+    {{ end }}
+    
+    <!-- 기타 메타 태그들 -->
+    {{ block "head" . }}{{ end }}
+</head>
+<body>
+    <!-- Header (기사페이지에서는 숨김) -->
+    {{ if not (eq .Type "posts") }}
+    <header class="header">
+        <div class="header-top">
+            <div class="container">
+                <div class="header-top-content">
+                    <span>{{ now.Format "2006년 1월 2일 월요일" }}</span>
+                    <span>대한민국 대표 뉴스</span>
+                </div>
+            </div>
+        </div>
+        
+        <div class="container">
+            <div class="header-content">
+                <a href="/" class="logo">
+                    <svg class="icon icon-lg"><use href="#icon-newspaper"></use></svg>
+                    {{ site.Title }}
+                </a>
+                
+                {{ partial "dynamic-menu.html" . }}
+                
+                <div class="search-icon">
+                    <svg class="icon"><use href="#icon-search"></use></svg>
+                </div>
+            </div>
+        </div>
+    </header>
+    {{ end }}
+
+    <!-- Breaking News -->
+    {{ if site.Params.breaking_news.enabled }}
+    {{ partial "breaking-news.html" . }}
+    {{ end }}
+
+    <!-- Main Content -->
+    <div class="site-wrapper">
+        {{ if .IsHome }}
+            {{ block "main" . }}{{ end }}
+        {{ else }}
+            <div class="container">
+                <div class="main-layout">
+                    <main class="primary-content">
+                        {{ block "main" . }}{{ end }}
+                    </main>
+                    
+                    <aside class="sidebar">
+                        <!-- 인기 기사 -->
+                        {{ partial "popular-articles.html" . }}
+                        
+                        <!-- 바로가기 -->
+                        <div class="sidebar-section">
+                            <h3 class="sidebar-title">
+                                <svg class="icon"><use href="#icon-link"></use></svg>
+                                바로가기
+                            </h3>
+                            
+                            <div class="quick-links">
+                                <a href="/archives/" class="quick-link">
+                                    <svg class="icon"><use href="#icon-archive"></use></svg>
+                                    전체 아카이브
+                                </a>
+                                <a href="/categories/" class="quick-link">
+                                    <svg class="icon"><use href="#icon-tag"></use></svg>
+                                    모든 카테고리
+                                </a>
+                                <a href="/tags/" class="quick-link">
+                                    <svg class="icon"><use href="#icon-hashtag"></use></svg>
+                                    태그 목록
+                                </a>
+                            </div>
+                        </div>
+                    </aside>
+                </div>
+            </div>
+        {{ end }}
+    </div>
+
+    <!-- Footer -->
+    {{ partial "footer.html" . }}
+    
+    <!-- JavaScript는 페이지 하단에서 비동기 로딩 -->
+    {{ partial "footer-scripts.html" . }}
+</body>
+</html> 

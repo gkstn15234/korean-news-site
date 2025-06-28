@@ -1,0 +1,59 @@
+{{- printf "<?xml version=\"1.0\" encoding=\"utf-8\" standalone=\"yes\"?>" | safeHTML }}
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+        xmlns:news="http://www.google.com/schemas/sitemap-news/0.9"
+        xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
+  
+  <!-- 홈페이지 -->
+  <url>
+    <loc>{{ .Permalink }}</loc>
+    <lastmod>{{ .Date.Format "2006-01-02T15:04:05-07:00" | safeHTML }}</lastmod>
+    <changefreq>hourly</changefreq>
+    <priority>1.0</priority>
+  </url>
+
+  <!-- 뉴스 기사들 -->
+  {{ range .Data.Pages }}
+    {{ if and (not .Draft) (ne .Type "page") }}
+    <url>
+      <loc>{{ .Permalink }}</loc>
+      <lastmod>{{ .Date.Format "2006-01-02T15:04:05-07:00" | safeHTML }}</lastmod>
+      
+      <!-- Google News 메타데이터 -->
+      {{ if .IsPage }}
+      <news:news>
+        <news:publication>
+          <news:name>{{ $.Site.Title }}</news:name>
+          <news:language>ko</news:language>
+        </news:publication>
+        <news:publication_date>{{ .Date.Format "2006-01-02T15:04:05-07:00" | safeHTML }}</news:publication_date>
+        <news:title>{{ .Title }}</news:title>
+        <news:keywords>{{ delimit .Params.tags ", " }}</news:keywords>
+      </news:news>
+      {{ end }}
+
+      <!-- 이미지 정보 -->
+      {{ if .Params.featured_image }}
+      <image:image>
+        <image:loc>{{ .Params.featured_image | absURL }}</image:loc>
+        <image:caption>{{ .Params.image_caption | default .Title }}</image:caption>
+        <image:title>{{ .Title }}</image:title>
+      </image:image>
+      {{ end }}
+
+      <changefreq>{{ if .IsPage }}daily{{ else }}weekly{{ end }}</changefreq>
+      <priority>{{ if .IsPage }}0.8{{ else }}0.5{{ end }}</priority>
+    </url>
+    {{ end }}
+  {{ end }}
+
+  <!-- 카테고리 페이지들 -->
+  {{ range .Site.Taxonomies.categories }}
+  <url>
+    <loc>{{ $.Site.BaseURL }}/categories/{{ .Page.Title | urlize }}/</loc>
+    <lastmod>{{ now.Format "2006-01-02T15:04:05-07:00" | safeHTML }}</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.7</priority>
+  </url>
+  {{ end }}
+
+</urlset> 

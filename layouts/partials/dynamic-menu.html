@@ -1,0 +1,29 @@
+<!-- 동적 카테고리 메뉴 -->
+<nav class="main-nav">
+    <a href="/" {{ if .IsHome }}class="active"{{ end }}>홈</a>
+    
+    <!-- 데이터 파일에서 활성화된 카테고리들 자동 생성 -->
+    {{ range site.Data.categories.categories }}
+        {{ if .active }}
+        <a href="/categories/{{ .slug }}/" 
+           class="category-link" 
+           data-category="{{ .slug }}">
+            {{ .icon }} {{ .name }}
+        </a>
+        {{ end }}
+    {{ end }}
+    
+    <a href="/archives/">아카이브</a>
+    <a href="/admin/" style="background: #e53e3e; color: white; padding: 5px 10px; border-radius: 4px; margin-left: 10px;">관리자</a>
+</nav>
+
+<style>
+.category-link {
+    transition: all 0.2s ease;
+}
+.category-link:hover {
+    transform: translateY(-1px);
+    background-color: #3182ce;
+    color: white;
+}
+</style> 

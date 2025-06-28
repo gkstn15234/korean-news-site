@@ -1,0 +1,76 @@
+{{/* 완전 자동화 이미지 처리 시스템 - Core Web Vitals 최적화 */}}
+{{ $image := .image }}
+{{ $alt := .alt | default "뉴스 이미지" }}
+{{ $class := .class | default "responsive-image" }}
+
+{{ if $image }}
+  {{ if hasPrefix $image "http" }}
+    {{/* 외부 이미지 - WebP 자동 변환 */}}
+    <picture class="{{ $class }}">
+      {{/* 데스크톱 WebP */}}
+      <source media="(min-width: 769px)" 
+              srcset="{{ $image }}?w=1200&h=630&fit=crop&fm=webp&q=85" 
+              type="image/webp">
+      {{/* 모바일 WebP */}}
+      <source media="(max-width: 768px)" 
+              srcset="{{ $image }}?w=800&h=420&fit=crop&fm=webp&q=85" 
+              type="image/webp">
+      {{/* 데스크톱 기본 */}}
+      <source media="(min-width: 769px)" 
+              srcset="{{ $image }}?w=1200&h=630&fit=crop&q=85">
+      {{/* 모바일 기본 */}}
+      <source media="(max-width: 768px)" 
+              srcset="{{ $image }}?w=800&h=420&fit=crop&q=85">
+      {{/* Fallback 이미지 */}}
+      <img src="{{ $image }}?w=1200&h=630&fit=crop&q=85" 
+           alt="{{ $alt }}" 
+           loading="lazy" 
+           decoding="async"
+           width="1200"
+           height="630"
+           onerror='this.src="/images/default-news.svg"'>
+    </picture>
+  {{ else }}
+    {{/* 로컬 이미지 - Hugo 이미지 처리 */}}
+    {{ $localImage := resources.Get $image }}
+    {{ if $localImage }}
+      {{ $desktop := $localImage.Resize "1200x630 webp q85" }}
+      {{ $mobile := $localImage.Resize "800x420 webp q85" }}
+      {{ $desktopJpg := $localImage.Resize "1200x630 jpg q85" }}
+      {{ $mobileJpg := $localImage.Resize "800x420 jpg q85" }}
+      
+      <picture class="{{ $class }}">
+        <source media="(min-width: 769px)" 
+                srcset="{{ $desktop.RelPermalink }}" 
+                type="image/webp">
+        <source media="(max-width: 768px)" 
+                srcset="{{ $mobile.RelPermalink }}" 
+                type="image/webp">
+        <source media="(min-width: 769px)" 
+                srcset="{{ $desktopJpg.RelPermalink }}">
+        <source media="(max-width: 768px)" 
+                srcset="{{ $mobileJpg.RelPermalink }}">
+        <img src="{{ $desktopJpg.RelPermalink }}" 
+             alt="{{ $alt }}" 
+             loading="lazy" 
+             decoding="async"
+             width="1200"
+             height="630"
+             class="{{ $class }}"
+             style="max-width:100%;height:auto"
+             onerror='this.src="/images/default-news.svg"'>
+      </picture>
+    {{ else }}
+      {{/* 이미지 파일 없을 때 기본 이미지 */}}
+      <img src="/images/default-news.svg" 
+           alt="{{ $alt }}" 
+           loading="lazy" 
+           decoding="async" 
+           width="1200"
+           height="630"
+           class="{{ $class }}"
+           style="max-width:100%;height:auto"
+           onerror='this.src="/images/default-news.svg"'>
+    {{ end }}
+  {{ end }}
+{{ end }} 

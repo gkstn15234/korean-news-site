@@ -1,0 +1,275 @@
+{{- define "main" }}
+<div class="journalists-page">
+    <header class="page-header">
+        <h1>기자진 소개</h1>
+        <p>한국뉴스의 전문 기자진을 소개합니다.</p>
+    </header>
+
+    <div class="journalists-grid">
+        {{ range site.Data.journalists.journalists }}
+        {{ if .active }}
+        <div class="journalist-card">
+            <div class="journalist-photo">
+                {{ if .photo }}
+                <img src="{{ .photo }}" alt="{{ .name }} 기자" loading="lazy">
+                {{ else }}
+                <div class="photo-placeholder">
+                    <i class="fas fa-user"></i>
+                </div>
+                {{ end }}
+            </div>
+            
+            <div class="journalist-info">
+                <h3 class="journalist-name">{{ .name }}</h3>
+                <p class="journalist-department">{{ .department }}</p>
+                
+                {{ if .bio }}
+                <p class="journalist-bio">{{ .bio }}</p>
+                {{ end }}
+                
+                {{ if .specialties }}
+                <div class="journalist-specialties">
+                    <strong>전문분야:</strong>
+                    <div class="specialty-tags">
+                        {{ range .specialties }}
+                        <span class="specialty-tag">{{ . }}</span>
+                        {{ end }}
+                    </div>
+                </div>
+                {{ end }}
+                
+                <div class="journalist-contact">
+                    <a href="mailto:{{ .email }}" class="contact-email">
+                        <i class="fas fa-envelope"></i> {{ .email }}
+                    </a>
+                    {{ if .phone }}
+                    <span class="contact-phone">
+                        <i class="fas fa-phone"></i> {{ .phone }}
+                    </span>
+                    {{ end }}
+                </div>
+                
+                <!-- 해당 기자의 최근 기사 표시 -->
+                <div class="journalist-articles">
+                    <h4>최근 기사</h4>
+                    {{ $authorName := .name }}
+                    {{ $recentArticles := where (where site.RegularPages "Type" "posts") ".Params.author" $authorName }}
+                    {{ if $recentArticles }}
+                        <ul class="recent-articles">
+                        {{ range first 3 $recentArticles }}
+                            <li>
+                                <a href="{{ .Permalink }}">{{ .Title }}</a>
+                                <span class="article-date">{{ .Date.Format "1월 2일" }}</span>
+                            </li>
+                        {{ end }}
+                        </ul>
+                    {{ else }}
+                        <p class="no-articles">아직 작성한 기사가 없습니다.</p>
+                    {{ end }}
+                </div>
+            </div>
+        </div>
+        {{ end }}
+        {{ end }}
+    </div>
+</div>
+
+<style>
+.journalists-page {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 40px 20px;
+}
+
+.page-header {
+    text-align: center;
+    margin-bottom: 50px;
+}
+
+.page-header h1 {
+    font-size: 2.5rem;
+    color: var(--primary-color);
+    margin-bottom: 10px;
+}
+
+.page-header p {
+    font-size: 1.1rem;
+    color: var(--text-light);
+}
+
+.journalists-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+    gap: 30px;
+}
+
+.journalist-card {
+    background: white;
+    border-radius: 12px;
+    padding: 25px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.journalist-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 30px rgba(0,0,0,0.15);
+}
+
+.journalist-photo {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.journalist-photo img {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 3px solid var(--accent-color);
+}
+
+.photo-placeholder {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    background: var(--bg-light);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto;
+    border: 3px solid var(--accent-color);
+}
+
+.photo-placeholder i {
+    font-size: 2rem;
+    color: var(--text-light);
+}
+
+.journalist-name {
+    font-size: 1.4rem;
+    font-weight: 700;
+    color: var(--primary-color);
+    margin-bottom: 5px;
+    text-align: center;
+}
+
+.journalist-department {
+    font-size: 1rem;
+    color: var(--accent-color);
+    font-weight: 600;
+    text-align: center;
+    margin-bottom: 15px;
+}
+
+.journalist-bio {
+    font-size: 0.95rem;
+    line-height: 1.6;
+    color: var(--text-color);
+    margin-bottom: 15px;
+}
+
+.journalist-specialties {
+    margin-bottom: 15px;
+}
+
+.journalist-specialties strong {
+    color: var(--primary-color);
+    font-size: 0.9rem;
+}
+
+.specialty-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-top: 8px;
+}
+
+.specialty-tag {
+    background: var(--accent-color);
+    color: white;
+    padding: 4px 10px;
+    border-radius: 15px;
+    font-size: 0.8rem;
+    font-weight: 500;
+}
+
+.journalist-contact {
+    padding: 15px 0;
+    border-top: 1px solid var(--border-color);
+    border-bottom: 1px solid var(--border-color);
+    margin-bottom: 15px;
+}
+
+.contact-email {
+    display: block;
+    color: var(--primary-color);
+    text-decoration: none;
+    margin-bottom: 5px;
+    font-size: 0.9rem;
+}
+
+.contact-email:hover {
+    text-decoration: underline;
+}
+
+.contact-phone {
+    display: block;
+    color: var(--text-light);
+    font-size: 0.9rem;
+}
+
+.journalist-articles h4 {
+    color: var(--primary-color);
+    font-size: 1rem;
+    margin-bottom: 10px;
+}
+
+.recent-articles {
+    list-style: none;
+    padding: 0;
+}
+
+.recent-articles li {
+    margin-bottom: 8px;
+    font-size: 0.9rem;
+}
+
+.recent-articles a {
+    color: var(--text-color);
+    text-decoration: none;
+    line-height: 1.4;
+}
+
+.recent-articles a:hover {
+    color: var(--primary-color);
+    text-decoration: underline;
+}
+
+.article-date {
+    color: var(--text-light);
+    font-size: 0.8rem;
+    margin-left: 10px;
+}
+
+.no-articles {
+    color: var(--text-light);
+    font-size: 0.9rem;
+    font-style: italic;
+}
+
+@media (max-width: 768px) {
+    .journalists-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .journalist-card {
+        padding: 20px;
+    }
+    
+    .page-header h1 {
+        font-size: 2rem;
+    }
+}
+</style>
+{{- end }} 

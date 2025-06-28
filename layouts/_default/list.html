@@ -1,0 +1,201 @@
+{{- define "main" }}
+            <!-- 페이지 헤더 -->
+            <header style="margin: 20px 0 40px 0; text-align: center;">
+                {{ if .IsHome }}
+                    <h1 style="font-size: 3rem; font-weight: 800; color: var(--primary-color); margin-bottom: 20px;">
+                        {{ site.Title }}
+                    </h1>
+                    <p style="font-size: 1.2rem; color: var(--text-light); margin-bottom: 30px;">
+                        {{ site.Params.description }}
+                    </p>
+                {{ else }}
+                    <!-- 브레드크럼 -->
+                    <nav style="margin-bottom: 20px; text-align: left;">
+                        <a href="/" style="color: var(--text-light); text-decoration: none;">
+                            <i class="fas fa-home" style="margin-right: 5px;"></i>홈
+                        </a>
+                        <span style="margin: 0 10px; color: var(--text-light);">›</span>
+                        <span style="color: var(--primary-color); font-weight: 600;">{{ .Title }}</span>
+                    </nav>
+                    
+                    <h1 style="font-size: 2.5rem; font-weight: 800; color: var(--primary-color); margin-bottom: 10px;">
+                        {{ if .IsSection }}
+                            {{ if eq .Section "categories" }}
+                                카테고리: {{ .Title }}
+                            {{ else if eq .Section "tags" }}
+                                태그: {{ .Title }}
+                            {{ else }}
+                                {{ .Title }}
+                            {{ end }}
+                        {{ else }}
+                            {{ .Title }}
+                        {{ end }}
+                    </h1>
+                    
+                    {{ if .Params.description }}
+                    <p style="font-size: 1.1rem; color: var(--text-light); margin-bottom: 20px;">
+                        {{ .Params.description }}
+                    </p>
+                    {{ end }}
+                    
+                    <div style="color: var(--text-light); font-size: 0.9rem;">
+                        <i class="fas fa-newspaper" style="margin-right: 5px;"></i>
+                        총 {{ len .Pages }}개의 기사
+                    </div>
+                {{ end }}
+            </header>
+
+            {{ if .IsHome }}
+                <!-- 홈페이지 콘텐츠는 index.html에서 처리 -->
+                {{ .Content }}
+            {{ else }}
+                <!-- 기사 목록 -->
+                {{ if .Pages }}
+                <section class="news-section">
+                    <div class="news-grid">
+                        {{ range .Pages }}
+                        <article class="news-card">
+                            <div class="news-image">
+                                {{ if .Params.categories }}
+                                    {{ $category := index .Params.categories 0 }}
+                                    {{ range site.Data.categories.categories }}
+                                        {{ if eq .name $category }}{{ .icon }}{{ end }}
+                                    {{ end }}
+                                {{ else }}
+                                    📰
+                                {{ end }}
+                            </div>
+                            <div class="news-content">
+                                <div class="news-meta">
+                                    {{ if .Params.categories }}
+                                        {{ range .Params.categories }}
+                                            {{ $currentCat := . }}
+                                            {{ $categoryData := "" }}
+                                            {{ range site.Data.categories.categories }}
+                                                {{ if eq .name $currentCat }}
+                                                    {{ $categoryData = . }}
+                                                {{ end }}
+                                            {{ end }}
+                                            {{ if $categoryData }}
+                                                <span class="category-badge category-{{ $categoryData.slug }}">{{ . }}</span>
+                                            {{ else }}
+                                                <span class="category-badge">{{ . }}</span>
+                                            {{ end }}
+                                        {{ end }}
+                                    {{ end }}
+                                    
+                                    <span class="news-date">
+                                        <i class="far fa-calendar-alt"></i>
+                                        {{ .Date.Format "1월 2일" }}
+                                    </span>
+                                    
+                                    <span class="reading-time">
+                                        <i class="far fa-clock"></i>
+                                        {{ math.Round (div (countwords .Content) 200.0) }}분
+                                    </span>
+                                </div>
+                                
+                                <a href="{{ .Permalink }}" class="news-title">
+                                    {{ .Title }}
+                                </a>
+                                
+                                <div class="news-summary">
+                                    {{ if .Params.description }}
+                                        {{ .Params.description }}
+                                    {{ else if .Summary }}
+                                        {{ .Summary }}
+                                    {{ else }}
+                                        {{ .Content | truncate 150 }}
+                                    {{ end }}
+                                </div>
+                                
+                                <div class="news-footer">
+                                    <span class="news-author">
+                                        {{ if .Params.author }}{{ .Params.author }}{{ else }}한국뉴스팀{{ end }}
+                                    </span>
+                                    <a href="{{ .Permalink }}" class="read-more">
+                                        읽기 →
+                                    </a>
+                                </div>
+                            </div>
+                        </article>
+                        {{ end }}
+                    </div>
+                </section>
+
+                <!-- 페이지네이션 -->
+                {{ if .Paginator.HasPrev }}
+                <nav style="text-align: center; margin-top: 50px;">
+                    <div style="display: flex; justify-content: center; align-items: center; gap: 10px;">
+                        {{ if .Paginator.HasPrev }}
+                        <a href="{{ .Paginator.Prev.URL }}" style="background: var(--secondary-color); color: white; padding: 10px 20px; border-radius: 6px; text-decoration: none; font-weight: 600; transition: all 0.2s ease;">
+                            <i class="fas fa-arrow-left" style="margin-right: 5px;"></i>
+                            이전 페이지
+                        </a>
+                        {{ end }}
+                        
+                        <span style="color: var(--text-light); margin: 0 20px;">
+                            {{ .Paginator.PageNumber }} / {{ .Paginator.TotalPages }}
+                        </span>
+                        
+                        {{ if .Paginator.HasNext }}
+                        <a href="{{ .Paginator.Next.URL }}" style="background: var(--secondary-color); color: white; padding: 10px 20px; border-radius: 6px; text-decoration: none; font-weight: 600; transition: all 0.2s ease;">
+                            다음 페이지
+                            <i class="fas fa-arrow-right" style="margin-left: 5px;"></i>
+                        </a>
+                        {{ end }}
+                    </div>
+                </nav>
+                {{ end }}
+
+                {{ else }}
+                <!-- 기사가 없을 때 -->
+                <div style="text-align: center; padding: 60px 20px; color: var(--text-light);">
+                    <i class="fas fa-newspaper" style="font-size: 3rem; margin-bottom: 20px; opacity: 0.5;"></i>
+                    <h3 style="font-size: 1.5rem; margin-bottom: 10px;">기사가 없습니다</h3>
+                    <p>이 카테고리에는 아직 기사가 없습니다. 곧 업데이트될 예정입니다.</p>
+                    <a href="/" style="background: var(--secondary-color); color: white; padding: 12px 24px; border-radius: 6px; text-decoration: none; font-weight: 600; margin-top: 20px; display: inline-block;">
+                        홈으로 돌아가기
+                    </a>
+                </div>
+                {{ end }}
+            {{ end }}
+
+
+<style>
+/* 추가 스타일 */
+.category-badge {
+    padding: 4px 12px;
+    border-radius: 15px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: white;
+    text-decoration: none;
+    background: #6366f1; /* 기본 색상 */
+}
+
+/* 호버 효과 */
+.news-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+}
+
+a[href*="/categories/"]:hover,
+a[href*="/tags/"]:hover {
+    background: var(--hover-color) !important;
+    transform: translateY(-1px);
+}
+
+/* 반응형 */
+@media (max-width: 768px) {
+    .news-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    header h1 {
+        font-size: 2rem !important;
+    }
+}
+</style>
+
+{{- end }} 

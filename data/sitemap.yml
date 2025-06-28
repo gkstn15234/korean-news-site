@@ -1,0 +1,5 @@
+news_sitemap: true
+general_sitemap: true
+image_sitemap: true
+news_max_articles: 1000
+changefreq: "daily" 

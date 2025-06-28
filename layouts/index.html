@@ -1,0 +1,159 @@
+{{- define "main" }}
+
+<!-- 기사 작성 플로팅 버튼 -->
+<div class="floating-editor-btn">
+    <a href="/admin/" class="editor-btn" target="_blank">
+        <i class="fas fa-edit"></i>
+        <span>기사 작성</span>
+    </a>
+</div>
+
+<!-- 메인 페이지 헤더 -->
+<div class="hero-section">
+    <div class="container">
+        <h1 class="site-headline">{{ site.Title }}</h1>
+        <p class="site-tagline">{{ site.Params.description }}</p>
+    </div>
+</div>
+
+<!-- 카테고리 탭 -->
+<section class="category-tabs-section">
+    <div class="container">
+        {{ partial "category-tabs.html" . }}
+    </div>
+</section>
+
+<!-- 메인 콘텐츠 영역 -->
+<div class="main-layout">
+    <div class="container">
+        <div class="content-grid">
+            
+            <!-- 주요 뉴스 섹션 -->
+            <main class="primary-content">
+                
+                <!-- 최신 뉴스 -->
+                <section class="latest-news">
+                                    <h2 class="section-title">
+                    <svg class="icon"><use href="#icon-newspaper"></use></svg>
+                    최신 뉴스
+                </h2>
+                    
+                    <div class="news-grid">
+                        {{ range first 6 (where site.RegularPages "Type" "posts") }}
+                            {{ partial "korean-news-card.html" . }}
+                        {{ end }}
+                    </div>
+                </section>
+                
+                <!-- 카테고리별 뉴스 섹션 -->
+                {{ $categories := slice "정치" "경제" "사회" "스포츠" }}
+                {{ range $categories }}
+                    {{ $categoryPages := where site.RegularPages ".Params.categories" "intersect" (slice .) }}
+                    {{ if $categoryPages }}
+                    <section class="category-section">
+                                        <h2 class="section-title">
+                    <svg class="icon"><use href="#icon-tag"></use></svg>
+                    {{ . }}
+                    <a href="/categories/{{ . | urlize }}/" class="more-link">더보기 →</a>
+                </h2>
+                        
+                        <div class="category-news-grid">
+                            {{ range first 3 $categoryPages }}
+                                {{ partial "korean-news-card.html" . }}
+                            {{ end }}
+                        </div>
+                    </section>
+                    {{ end }}
+                {{ end }}
+                
+            </main>
+            
+            <!-- 사이드바 -->
+            <aside class="sidebar">
+                
+                <!-- 인기 기사 -->
+                {{ partial "popular-articles.html" . }}
+                
+                <!-- 바로가기 -->
+                <div class="sidebar-section">
+                                            <h3 class="sidebar-title">
+                            <svg class="icon"><use href="#icon-link"></use></svg>
+                            바로가기
+                        </h3>
+                    
+                    <div class="quick-links">
+                                                    <a href="/archives/" class="quick-link">
+                                <svg class="icon"><use href="#icon-archive"></use></svg>
+                                전체 아카이브
+                            </a>
+                            <a href="/categories/" class="quick-link">
+                                <svg class="icon"><use href="#icon-tag"></use></svg>
+                                모든 카테고리
+                            </a>
+                            <a href="/tags/" class="quick-link">
+                                <svg class="icon"><use href="#icon-hashtag"></use></svg>
+                                태그 목록
+                            </a>
+                    </div>
+                </div>
+                
+            </aside>
+        </div>
+    </div>
+</div>
+
+{{/* 메인페이지 스타일 최적화 - 긴 작업 분할 */}}
+<script>
+// 스타일 로딩을 청크로 분할하여 메인 스레드 블록 방지
+function loadStylesInChunks() {
+    const styles = [
+        // 청크 1: 섹션 타이틀
+        `.section-title{font-size:1.5rem;font-weight:700;color:var(--primary);margin-bottom:1.5rem;padding-bottom:.5rem;border-bottom:2px solid var(--accent);display:flex;justify-content:space-between;align-items:center}`,
+        
+        // 청크 2: 링크 스타일
+        `.more-link{font-size:.9rem;color:#718096;text-decoration:none}.more-link:hover{color:var(--accent)}`,
+        
+        // 청크 3: 그리드 레이아웃
+        `.news-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:1.5rem;margin-bottom:2rem}.category-news-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:1.5rem;margin-bottom:2rem}`,
+        
+        // 청크 4: 사이드바
+        `.sidebar{padding-left:1rem}.sidebar-section{background:var(--light);border-radius:8px;padding:1.5rem;margin-bottom:1.5rem}.sidebar-title{font-size:1.1rem;font-weight:700;color:var(--primary);margin-bottom:1rem;display:flex;align-items:center}`,
+        
+        // 청크 5: 퀵링크
+        `.quick-links{display:flex;flex-direction:column;gap:.5rem}.quick-link{display:flex;align-items:center;padding:.75rem;color:var(--text);text-decoration:none;border-radius:6px;transition:transform .2s ease}.quick-link:hover{background:#fff;color:var(--primary);transform:translateX(5px)}`,
+        
+        // 청크 6: 플로팅 버튼
+        `.floating-editor-btn{position:fixed;bottom:30px;right:30px;z-index:1000}.editor-btn{display:flex;align-items:center;gap:10px;background:linear-gradient(135deg,#667eea 0%,#764ba2 100%);color:white;padding:15px 25px;border-radius:50px;text-decoration:none;font-weight:600;font-size:1.1rem;box-shadow:0 8px 32px rgba(102,126,234,0.3);transition:all 0.3s ease;border:none;cursor:pointer}.editor-btn:hover{transform:translateY(-3px);box-shadow:0 12px 40px rgba(102,126,234,0.4);background:linear-gradient(135deg,#764ba2 0%,#667eea 100%)}`,
+        
+        // 청크 7: 모바일 반응형
+        `@media(max-width:768px){.news-grid,.category-news-grid{grid-template-columns:1fr;gap:1rem}.sidebar{padding-left:0}.section-title{font-size:1.3rem;flex-direction:column;align-items:flex-start;gap:.5rem}.floating-editor-btn{bottom:20px;right:20px}.editor-btn{padding:12px;width:60px;height:60px;border-radius:50%;justify-content:center}.editor-btn span{display:none}}`
+    ];
+    
+    let index = 0;
+    function loadNextChunk() {
+        if (index >= styles.length) return;
+        
+        const style = document.createElement('style');
+        style.textContent = styles[index];
+        document.head.appendChild(style);
+        index++;
+        
+        // 다음 청크를 다음 프레임에서 로딩
+        if (index < styles.length) {
+            requestAnimationFrame(loadNextChunk);
+        }
+    }
+    
+    // 첫 번째 청크부터 시작
+    requestAnimationFrame(loadNextChunk);
+}
+
+// 페이지 로드 후 실행
+if (window.requestIdleCallback) {
+    requestIdleCallback(loadStylesInChunks);
+} else {
+    setTimeout(loadStylesInChunks, 100);
+}
+</script>
+
+{{- end }} 

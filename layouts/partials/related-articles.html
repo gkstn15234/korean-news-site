@@ -1,0 +1,26 @@
+{{ $related := .Site.RegularPages.Related . | first 3 }}
+{{ if $related }}
+<section class="related-articles">
+    <h3>관련 기사</h3>
+    <div class="related-grid">
+        {{ range $related }}
+        <article class="related-card">
+            <a href="{{ .Permalink }}" class="related-link">
+                {{ if .Params.featured_image }}
+                <div class="related-image">
+                    {{ partial "optimized-image.html" (dict "image" .Params.featured_image "alt" .Title "class" "related-img") }}
+                </div>
+                {{ end }}
+                <div class="related-content">
+                    <h4 class="related-title">{{ .Title }}</h4>
+                    <div class="related-meta">
+                        <span class="related-category">{{ index .Params.categories 0 }}</span>
+                        <time class="related-date">{{ .Date.Format "01.02" }}</time>
+                    </div>
+                </div>
+            </a>
+        </article>
+        {{ end }}
+    </div>
+</section>
+{{ end }} 

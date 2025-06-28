@@ -1,0 +1,30 @@
+{{/* Korean Breadcrumb Navigation */}}
+<nav class="korean-breadcrumb" aria-label="브레드크럼 네비게이션">
+  <a href="/" title="홈으로 가기">
+    <svg class="icon icon-sm" style="margin-right: 4px;"><use href="#icon-home"></use></svg>
+    홈
+  </a>
+  
+  {{ if .IsPage }}
+    {{ if .Params.categories }}
+      {{ range first 1 .Params.categories }}
+        <span class="korean-breadcrumb-separator">›</span>
+        <a href="/categories/{{ . | urlize }}/" title="{{ . }} 카테고리 보기">{{ . }}</a>
+      {{ end }}
+    {{ end }}
+    <span class="korean-breadcrumb-separator">›</span>
+    <span class="korean-breadcrumb-current" style="color: var(--primary); font-weight: 600;">
+      {{ .Title }}
+    </span>
+  {{ else if .IsSection }}
+    <span class="korean-breadcrumb-separator">›</span>
+    <span class="korean-breadcrumb-current" style="color: var(--primary); font-weight: 600;">
+      {{ .Title }}
+    </span>
+  {{ else if isset .Params "categories" }}
+    <span class="korean-breadcrumb-separator">›</span>
+    <span class="korean-breadcrumb-current" style="color: var(--primary); font-weight: 600;">
+      {{ .Title }}
+    </span>
+  {{ end }}
+</nav> 

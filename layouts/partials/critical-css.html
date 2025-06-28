@@ -1,0 +1,53 @@
+<style>
+/* 초경량 Critical CSS - 렌더링 차단 최소화 */
+:root {
+    --primary: #1a365d;
+    --accent: #e53e3e;
+    --text: #2d3748;
+    --bg: #fff;
+    --light: #f7fafc;
+}
+
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:system-ui,-apple-system,sans-serif;line-height:1.6;color:var(--text);background:var(--bg)}
+.container{max-width:1200px;margin:0 auto;padding:0 1rem}
+
+/* 헤더 - 폴드 위 핵심 */
+.header{background:var(--bg);border-bottom:2px solid var(--accent);position:sticky;top:0;z-index:100}
+.header-top{background:var(--primary);color:#fff;padding:8px 0;font-size:.9rem}
+.header-top-content{display:flex;justify-content:space-between;align-items:center}
+.header-content{display:flex;justify-content:space-between;align-items:center;padding:15px 0}
+.logo{font-size:1.8rem;font-weight:800;color:var(--accent);text-decoration:none;display:flex;align-items:center;gap:8px}
+.main-nav{display:flex;background:var(--light);border-radius:6px;padding:2px}
+.main-nav a{text-decoration:none;color:var(--text);padding:8px 16px;border-radius:4px;font-weight:600;transition:transform .2s ease,background-color .2s ease,color .2s ease;will-change:transform}
+.main-nav a:hover,.main-nav a.active{background:var(--primary);color:#fff;transform:translateZ(0) scale(1.05)}
+
+/* 히어로 섹션 */
+.hero-section{background:linear-gradient(135deg,var(--primary),#2c5aa0);color:#fff;padding:2rem 0;text-align:center}
+.site-headline{font-size:2.5rem;font-weight:800;margin-bottom:1rem}
+.site-tagline{font-size:1.1rem;opacity:.9}
+
+/* SVG 아이콘 스타일 */
+.icon{width:1em;height:1em;display:inline-block;vertical-align:middle;fill:currentColor}
+.icon-sm{width:.8em;height:.8em}
+.icon-lg{width:1.2em;height:1.2em}
+.icon-xl{width:1.5em;height:1.5em}
+
+/* 기본 레이아웃 - 레이아웃 시프트 방지 */
+.site-wrapper{min-height:100vh;contain:layout}
+.content-grid{display:grid;grid-template-columns:1fr 300px;gap:2rem;margin:1rem 0}
+.news-card{background:#fff;border-radius:8px;box-shadow:0 2px 8px rgba(0,0,0,.1);margin-bottom:1rem;transition:transform .2s ease;will-change:transform}
+.news-card:hover{transform:translateY(-2px) translateZ(0)}
+
+/* 모바일 */
+@media(max-width:768px){
+.header-top{display:none}
+.header-content{flex-direction:column;gap:.5rem}
+.logo{font-size:1.4rem}
+.main-nav{order:-1;width:100%;justify-content:center}
+.main-nav a{padding:6px 12px;font-size:.9rem}
+.content-grid{grid-template-columns:1fr;gap:1rem}
+.hero-section{padding:1.5rem 0}
+.site-headline{font-size:1.8rem}
+}
+</style> 

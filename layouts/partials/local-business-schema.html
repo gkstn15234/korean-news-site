@@ -1,0 +1,106 @@
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "NewsMediaOrganization",
+  "name": "{{ .Site.Title }}",
+  "alternateName": "한국뉴스",
+  "url": "{{ .Site.BaseURL }}",
+  "logo": {
+    "@type": "ImageObject",
+    "url": "{{ "images/logo.png" | absURL }}",
+    "width": 400,
+    "height": 400
+  },
+  "sameAs": [
+    "https://www.facebook.com/koreanews",
+    "https://www.twitter.com/koreanews",
+    "https://www.youtube.com/koreanews"
+  ],
+  "address": {
+    "@type": "PostalAddress",
+    "streetAddress": "테헤란로 123",
+    "addressLocality": "강남구",
+    "addressRegion": "서울특별시",
+    "postalCode": "06142",
+    "addressCountry": "KR"
+  },
+  "geo": {
+    "@type": "GeoCoordinates",
+    "latitude": 37.4979,
+    "longitude": 127.0276
+  },
+  "contactPoint": [
+    {
+      "@type": "ContactPoint",
+      "telephone": "+82-2-1234-5678",
+      "contactType": "customer service",
+      "availableLanguage": "Korean"
+    },
+    {
+      "@type": "ContactPoint",
+      "telephone": "+82-2-1234-5678",
+      "contactType": "news tip",
+      "availableLanguage": "Korean",
+      "email": "news@koreanews.com"
+    }
+  ],
+  "founder": {
+    "@type": "Person",
+    "name": "김대표"
+  },
+  "foundingDate": "2024-06-27",
+  "numberOfEmployees": {
+    "@type": "QuantitativeValue",
+    "value": 50
+  },
+  "knowsAbout": [
+    "한국 정치",
+    "한국 경제", 
+    "한국 사회",
+    "한국 스포츠",
+    "실시간 뉴스",
+    "속보"
+  ],
+  "areaServed": {
+    "@type": "Country",
+    "name": "대한민국",
+    "sameAs": "https://en.wikipedia.org/wiki/South_Korea"
+  },
+  "serviceArea": [
+    {
+      "@type": "City",
+      "name": "서울특별시",
+      "addressCountry": "KR"
+    },
+    {
+      "@type": "State", 
+      "name": "경기도",
+      "addressCountry": "KR"
+    },
+    {
+      "@type": "Country",
+      "name": "대한민국",
+      "addressCountry": "KR"
+    }
+  ],
+  "openingHours": "Mo-Fr 09:00-18:00",
+  "priceRange": "무료",
+  "currenciesAccepted": "KRW",
+  "paymentAccepted": "무료 서비스",
+  "email": "info@koreanews.com",
+  "faxNumber": "+82-2-1234-5679",
+  "hasMap": "https://maps.google.com/?q=서울특별시+강남구+테헤란로+123",
+  "isAccessibleForFree": true,
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "{{ .Site.BaseURL }}"
+  },
+  "publishingPrinciples": "{{ .Site.BaseURL }}editorial-guidelines/",
+  "diversityPolicy": "{{ .Site.BaseURL }}about/",
+  "ethicsPolicy": "{{ .Site.BaseURL }}editorial-guidelines/",
+  "correctionsPolicy": "{{ .Site.BaseURL }}editorial-guidelines/",
+  "masthead": "{{ .Site.BaseURL }}about/",
+  "missionCoveragePrioritiesPolicy": "{{ .Site.BaseURL }}about/",
+  "verificationFactCheckingPolicy": "{{ .Site.BaseURL }}editorial-guidelines/"
+}
+</script> 

@@ -1,0 +1,42 @@
+{{- printf "<?xml version=\"1.0\" encoding=\"utf-8\" standalone=\"yes\"?>" | safeHTML }}
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  
+  <!-- 기자별 페이지들 -->
+  {{ $authors := slice }}
+  {{ range .Site.RegularPages }}
+    {{ if .Params.author }}
+      {{ $authors = $authors | append .Params.author }}
+    {{ end }}
+  {{ end }}
+  
+  {{ range ($authors | uniq) }}
+  <url>
+    <loc>{{ $.Site.BaseURL }}author/{{ . | urlize }}/</loc>
+    <lastmod>{{ now.Format "2006-01-02T15:04:05-07:00" | safeHTML }}</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  {{ end }}
+
+  <!-- 편집팀 페이지 -->
+  <url>
+    <loc>{{ .Site.BaseURL }}author/한국뉴스-편집팀/</loc>
+    <lastmod>{{ now.Format "2006-01-02T15:04:05-07:00" | safeHTML }}</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <!-- 기자별 최신 기사들 -->
+  {{ range ($authors | uniq) }}
+    {{ $author := . }}
+    {{ range first 5 (where $.Site.RegularPages ".Params.author" $author) }}
+    <url>
+      <loc>{{ .Permalink }}</loc>
+      <lastmod>{{ .Date.Format "2006-01-02T15:04:05-07:00" | safeHTML }}</lastmod>
+      <changefreq>daily</changefreq>
+      <priority>0.8</priority>
+    </url>
+    {{ end }}
+  {{ end }}
+
+</urlset> 

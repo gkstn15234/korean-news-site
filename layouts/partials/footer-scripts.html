@@ -1,0 +1,115 @@
+<script>
+// 성능 최적화된 이미지 지연 로딩
+(function() {
+    if (!('IntersectionObserver' in window)) return;
+    
+    let pendingImages = [];
+    let isProcessing = false;
+    
+    // 배치 처리로 이미지 로딩 최적화
+    function processBatch() {
+        if (isProcessing || pendingImages.length === 0) return;
+        isProcessing = true;
+        
+        const batch = pendingImages.splice(0, 3); // 3개씩 배치 처리
+        
+        batch.forEach(img => {
+            requestAnimationFrame(() => {
+                img.src = img.dataset.src || img.src;
+                img.classList.add('loaded');
+            });
+        });
+        
+        isProcessing = false;
+        
+        // 남은 이미지가 있으면 다음 프레임에서 처리
+        if (pendingImages.length > 0) {
+            requestAnimationFrame(processBatch);
+        }
+    }
+    
+    const imageObserver = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                pendingImages.push(entry.target);
+                imageObserver.unobserve(entry.target);
+                
+                // 배치 처리 시작
+                if (!isProcessing) {
+                    requestAnimationFrame(processBatch);
+                }
+            }
+        });
+    }, {
+        rootMargin: '50px 0px', // 50px 일찍 로딩 시작
+        threshold: 0.1
+    });
+
+    // 페이지 로드 후 이미지 관찰 시작
+    function startObserving() {
+        const images = document.querySelectorAll('img[loading="lazy"]');
+        if (images.length === 0) return;
+        
+        // 이미지 관찰을 청크로 분할
+        let index = 0;
+        function observeChunk() {
+            const chunk = Array.from(images).slice(index, index + 10);
+            chunk.forEach(img => imageObserver.observe(img));
+            index += 10;
+            
+            if (index < images.length) {
+                requestAnimationFrame(observeChunk);
+            }
+        }
+        
+        requestAnimationFrame(observeChunk);
+    }
+    
+    // DOM 준비 후 실행
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', startObserving);
+    } else {
+        startObserving();
+    }
+})();
+
+// 성능 모니터링 및 최적화
+if ('PerformanceObserver' in window) {
+    const perfObserver = new PerformanceObserver((list) => {
+        list.getEntries().forEach((entry) => {
+            // LCP 최적화
+            if (entry.entryType === 'largest-contentful-paint') {
+                console.info('LCP:', entry.startTime + 'ms');
+            }
+            
+            // 긴 작업 감지
+            if (entry.entryType === 'longtask') {
+                console.warn('Long task detected:', entry.duration + 'ms');
+            }
+        });
+    });
+    
+    try {
+        perfObserver.observe({entryTypes: ['largest-contentful-paint', 'longtask']});
+    } catch (e) {
+        // 지원하지 않는 브라우저에서는 무시
+    }
+}
+
+// CSS 로드 완료 확인
+function loadCSS(href) {
+    const link = document.createElement('link');
+    link.rel = 'stylesheet';
+    link.href = href;
+    document.head.appendChild(link);
+}
+
+// 지연된 스타일 로딩
+if (window.requestIdleCallback) {
+    requestIdleCallback(() => {
+        // 중요하지 않은 CSS들을 유휴 시간에 로드
+    });
+}
+
+// 소셜 공유 기능은 각 페이지에서 개별 처리됩니다
+</script> 

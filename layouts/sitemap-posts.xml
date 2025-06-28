@@ -1,0 +1,47 @@
+{{- printf "<?xml version=\"1.0\" encoding=\"utf-8\" standalone=\"yes\"?>" | safeHTML }}
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+        xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
+  
+  <!-- 일반 글 포스트들 -->
+  {{ range .Site.RegularPages }}
+    {{ if and (not .Draft) (eq .Section "posts") }}
+    <url>
+      <loc>{{ .Permalink }}</loc>
+      <lastmod>{{ .Date.Format "2006-01-02T15:04:05-07:00" | safeHTML }}</lastmod>
+      
+      <!-- 이미지 정보 -->
+      {{ if .Params.featured_image }}
+      <image:image>
+        <image:loc>{{ .Params.featured_image | absURL }}</image:loc>
+        <image:caption>{{ .Params.image_caption | default .Title }}</image:caption>
+        <image:title>{{ .Title }}</image:title>
+      </image:image>
+      {{ end }}
+
+      <changefreq>daily</changefreq>
+      <priority>0.8</priority>
+    </url>
+    {{ end }}
+  {{ end }}
+
+  <!-- 카테고리 페이지들 -->
+  {{ range .Site.Taxonomies.categories }}
+  <url>
+    <loc>{{ $.Site.BaseURL }}categories/{{ .Page.Title | urlize }}/</loc>
+    <lastmod>{{ now.Format "2006-01-02T15:04:05-07:00" | safeHTML }}</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.7</priority>
+  </url>
+  {{ end }}
+
+  <!-- 태그 페이지들 -->
+  {{ range .Site.Taxonomies.tags }}
+  <url>
+    <loc>{{ $.Site.BaseURL }}tags/{{ .Page.Title | urlize }}/</loc>
+    <lastmod>{{ now.Format "2006-01-02T15:04:05-07:00" | safeHTML }}</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.5</priority>
+  </url>
+  {{ end }}
+
+</urlset> 

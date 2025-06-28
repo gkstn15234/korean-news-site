@@ -1,0 +1,44 @@
+{{ if site.Data.sitemap.news_sitemap }}
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+        xmlns:news="http://www.google.com/schemas/sitemap-news/0.9"
+        xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
+  {{ $maxArticles := site.Data.sitemap.news_max_articles | default 1000 }}
+  {{ $count := 0 }}
+  {{ range where site.RegularPages "Type" "posts" }}
+    {{ if and (lt $count $maxArticles) (not .Params.draft) }}
+      {{ $count = add $count 1 }}
+      <url>
+        <loc>{{ .Permalink }}</loc>
+        <lastmod>{{ .Date.Format "2006-01-02T15:04:05Z07:00" }}</lastmod>
+        <changefreq>{{ site.Data.sitemap.changefreq | default "daily" }}</changefreq>
+        <priority>{{ if .Params.featured }}1.0{{ else if .Params.breaking }}0.9{{ else }}0.8{{ end }}</priority>
+        
+        <!-- 뉴스 메타데이터 -->
+        <news:news>
+          <news:publication>
+            <news:name>{{ site.Title }}</news:name>
+            <news:language>ko</news:language>
+          </news:publication>
+          <news:publication_date>{{ .Date.Format "2006-01-02T15:04:05Z07:00" }}</news:publication_date>
+          <news:title><![CDATA[{{ .Title }}]]></news:title>
+          {{ if .Params.categories }}
+          <news:keywords>{{ delimit .Params.categories ", " }}</news:keywords>
+          {{ end }}
+        </news:news>
+        
+        <!-- 이미지 메타데이터 -->
+        {{ if .Params.featured_image }}
+        <image:image>
+          <image:loc>{{ .Params.featured_image | absURL }}</image:loc>
+          <image:title><![CDATA[{{ .Title }}]]></image:title>
+          {{ if .Params.image_caption }}
+          <image:caption><![CDATA[{{ .Params.image_caption }}]]></image:caption>
+          {{ end }}
+        </image:image>
+        {{ end }}
+      </url>
+    {{ end }}
+  {{ end }}
+</urlset>
+{{ end }} 

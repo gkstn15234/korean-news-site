@@ -1,0 +1,6 @@
+{
+  "github_token": "여기에 GitHub Personal Access Token 입력",
+  "github_username": "여기에 GitHub 사용자명 입력",
+  "github_repo": "여기에 리포지토리명 입력",
+  "gemini_api_key": "여기에 Gemini API Key 입력"
+} 
