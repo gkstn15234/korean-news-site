@@ -1,0 +1,17 @@
+{
+  "name": "korean-news-site",
+  "version": "1.0.0",
+  "description": "한국 뉴스 사이트",
+  "scripts": {
+    "start": "hugo server -D",
+    "build": "hugo --minify",
+    "deploy": "hugo --minify && git add . && git commit -m \"뉴스 업데이트\" && git push"
+  },
+  "keywords": [
+    "hugo",
+    "news",
+    "korean"
+  ],
+  "author": "한국뉴스팀",
+  "license": "MIT"
+}
